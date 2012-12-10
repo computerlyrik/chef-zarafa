@@ -1,5 +1,6 @@
-Description
-===========
+# Description
+
+Motivated by freeing mobile devices:
 
 Setup Zarafa to 
 - sync your Android/i/Windows Phone (ActiveSync)
@@ -7,23 +8,26 @@ Setup Zarafa to
 - receive and send emails via imap
 - Webinterface to manage all
 
-Requirements
-============
+**For more see http://www.zarafa.com/content/mobility**
 
-mysql and database cookbook
+# Requirements
+Cookbooks
+```
+mysql and database
 
 modified openldap_cookbook reachable at ...TODO
+```
 
-Attributes
-==========
-
+# Attributes
 Set up a catchall user with
+```ruby
 node['zarafa']['catchall'] = "mail@mydomain.com"
+```
 
-Usage
-=====
-
+# Usage
 run recipe
 
+# Contact
+see metadata.rb
 
 
