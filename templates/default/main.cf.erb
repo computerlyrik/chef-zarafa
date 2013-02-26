@@ -33,7 +33,7 @@ myhostname = <%=node['hostname']%>.<%=node['domain']%>
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
 myorigin = /etc/mailname
-mydestination = <%=node['hostname']%>.<%=node['domain']%>, localhost.<%=node['domain']%>, localhost
+mydestination = <%=node['hostname']%>.<%=node['domain']%>, localhost.<%=node['domain']%>, localhost <%node['zarafa']['additional_domains'].each do |dom|%> ,<%=dom%> <%end%>
 relayhost =
 mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 mailbox_size_limit = 0
