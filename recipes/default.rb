@@ -17,6 +17,11 @@
 # limitations under the License.
 #
 
+if not node[:zarafa][:backend_type]
+
+# TODO: FAIL 
+
+end 
 
 #TODO: ARCHITECTURE INDEPENDENCY, wget correct zarafa-version, apt-get dependencies of zarafa debian packages
 #wget http://download.zarafa.com/community/final/7.0/7.0.8-35178/zcp-7.0.8-35178-ubuntu-12.04-x86_64-free.tar.gz
