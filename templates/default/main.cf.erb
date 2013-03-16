@@ -41,6 +41,18 @@ recipient_delimiter = +
 inet_interfaces = all
 
 virtual_mailbox_domains = <%=node['domain']%>
+
+<%if node[:zarafa][:backend_type] == 'ldap'%>
 virtual_mailbox_maps = ldap:/etc/postfix/ldap-users.cf
 virtual_alias_maps = ldap:/etc/postfix/ldap-aliases.cf<%if not node['zarafa']['catchall'].nil? %>, hash:/etc/postfix/catchall<% end %>
+<%end%>
+
+<%if node[:zarafa][:backend_type] == 'mysql'%>
+virtual_alias_maps = mysql:/etc/postfix/mysql-aliases.cf, mysql:/etc/postfix/mysql-email2email.cf, hash:/etc/postfix/catchall
+<%end%>
+
 virtual_transport = lmtp:127.0.0.1:2003
+
+# mailbox_transport = zarafa: zarafa_destination_recipient_limit = 1
+
+# mailbox_command = /usr/bin/zarafa-dagent “$USER”
