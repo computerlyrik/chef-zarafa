@@ -220,11 +220,25 @@ end
 template "/etc/zarafa/gateway.cfg" do
   notifies :restart, resources(:service=>"zarafa-gateway")
 end
+if node[:zarafa][:vmail_user]
+directory "/var/log/zarafa/" do
+  mode "755"
+  owner node[:zarafa][:vmail_user]
+  group node[:zarafa][:vmail_user]
+end
+end
 
-##CONFIGURE Z-PUSH############################################
-
-#get and untar z-push
-#template "/usr/share/z-push/config.php" => set timezone
+# enable ssl
+if node[:zarafa][:ssl]
+bash "enable https" do
+  cwd Chef::Config[:file_cache_path]
+  code <<-EOF
+   a2enmod ssl
+   a2ensite default-ssl
+  EOF
+  notifies :reload, resources(:service=>"apache2")
+end
+end
 
 directory "/var/lib/z-push" do
   mode 0755
