@@ -26,3 +26,14 @@ directory "/var/lib/z-push" do
   owner "www-data"
   group "www-data"
 end
+
+directory "/var/log/z-push" do
+  mode 0755
+  owner "www-data"
+  group "www-data"
+end
+
+template "/etc/apache2/httpd.conf" do
+  notifies :reload, resources(:service=>"apache2")
+end
+
