@@ -50,8 +50,17 @@ end
 
 ##CONFIGURE POSTFIX SERVER############################
 package "postfix"
-package "postfix-ldap"
 
+if node[:zarafa][:backend_type] == 'mysql'
+package "postfix-mysql"
+# check if really needed
+#package "postfix-pcre"
+#package "postfix-cdb"
+end
+
+if node[:zarafa][:backend_type] == 'ldap'
+package "postfix-ldap"
+end
 service "postfix" do
   supports :restart => true
 end
