@@ -206,9 +206,11 @@ service "zarafa-gateway" do
   action :start
 end
 
+if node[:zarafa][:backend_type] == 'ldap'
 template "/etc/zarafa/ldap.cfg" do
   variables ({:ldap_server => ldap_server})
   notifies :restart, resources(:service=>"zarafa-server")
+end
 end
 
 template "/etc/zarafa/server.cfg" do
