@@ -240,18 +240,15 @@ bash "enable https" do
 end
 end
 
-directory "/var/lib/z-push" do
-  mode 0755
-  owner "www-data"
-  group "www-data"
-end
-directory "/var/log/z-push" do
-  mode 0755
-  owner "www-data"
-  group "www-data"
+execute "a2enmod rewrite"
+  notifies :reload, resources(:service=>"apache2")
 end
 
-template "/etc/apache2/httpd.conf" do
+template "/etc/apache2/sites-available/zarafa-webapp" do
+  notifies :reload, resources(:service=>"apache2")
+end
+
+template "/etc/apache2/sites-available/zarafa-webaccess" do
   notifies :reload, resources(:service=>"apache2")
 end
 
