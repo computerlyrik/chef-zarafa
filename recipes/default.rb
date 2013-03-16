@@ -91,27 +91,27 @@ end
 end
 
 if node[:zarafa][:backend_type] == 'mysql'
-execute "postmap -q ben@monkeyhood.org mysql-aliases.cf" do
+execute "postmap -q #{node['zarafa']['catchall']} mysql-aliases.cf" do
   action :nothing
   cwd "/etc/postfix"
   notifies :restart, resources(:service => "postfix")
 end
 
 template "/etc/postfix/mysql-aliases.cf" do
-  notifies :run, resources(:execute => "postmap -q ben@monkeyhood.org mysql-aliases.cf")
+  notifies :run, resources(:execute => "postmap -q #{node['zarafa']['catchall']} mysql-aliases.cf")
   notifies :restart, resources(:service => "postfix")
 end
 
 #catchall mysql mapping
 
-execute "postmap -q ben@monkeyhood.org email2email.cf" do
+execute "postmap -q #{node['zarafa']['catchall']} email2email.cf" do
   action :nothing
   cwd "/etc/postfix"
   notifies :restart, resources(:service => "postfix")
 end
 
 template "/etc/postfix/mysql-email2email.cf" do
-  notifies :run, resources(:execute => "postmap -q ben@monkeyhood.org email2email.cf")
+  notifies :run, resources(:execute => "postmap -q #{node['zarafa']['catchall']} email2email.cf")
   notifies :restart, resources(:service => "postfix")
 end
 end
