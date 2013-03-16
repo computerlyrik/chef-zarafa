@@ -71,6 +71,7 @@ execute "postmap catchall" do
   notifies :restart, resources(:service => "postfix")
 end
 
+if node[:zarafa][:backend_type] == 'ldap'
 ldap_server = search(:node, "recipes:openldap\\:\\:users && domain:#{node['domain']}").first
 
 template "/etc/postfix/ldap-aliases.cf" do
@@ -81,6 +82,33 @@ end
 template "/etc/postfix/ldap-users.cf" do
   variables ({:ldap_server => ldap_server})
   notifies :restart, resources(:service => "postfix")
+end
+end
+
+if node[:zarafa][:backend_type] == 'mysql'
+execute "postmap -q ben@monkeyhood.org mysql-aliases.cf" do
+  action :nothing
+  cwd "/etc/postfix"
+  notifies :restart, resources(:service => "postfix")
+end
+
+template "/etc/postfix/mysql-aliases.cf" do
+  notifies :run, resources(:execute => "postmap -q ben@monkeyhood.org mysql-aliases.cf")
+  notifies :restart, resources(:service => "postfix")
+end
+
+#catchall mysql mapping
+
+execute "postmap -q ben@monkeyhood.org email2email.cf" do
+  action :nothing
+  cwd "/etc/postfix"
+  notifies :restart, resources(:service => "postfix")
+end
+
+template "/etc/postfix/mysql-email2email.cf" do
+  notifies :run, resources(:execute => "postmap -q ben@monkeyhood.org email2email.cf")
+  notifies :restart, resources(:service => "postfix")
+end
 end
 
 if not node['zarafa']['catchall'].nil?
