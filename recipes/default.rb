@@ -136,6 +136,12 @@ template "/etc/default/saslauthd" do
   notifies :restart, resources(:service => "postfix")
 end
 
+if node[:zarafa][:vmail_user]
+template "/etc/postfix/master.cf" do
+  notifies :restart, resources(:service => "postfix")
+end
+end
+
 #set permissions for postfix
 directory "/var/spool/postfix/var/run/saslauthd" do
   owner "postfix"
