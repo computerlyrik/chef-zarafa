@@ -234,20 +234,17 @@ if node[:zarafa][:vmail_user]
   end
 end
 
-# enable ssl
+# enable ssl, let template update trigger the reload
 if node[:zarafa][:ssl]
   execute "a2enmod ssl"
   execute "a2enmod rewrite"
   execute "a2dissite default"
   execute "a2ensite default-ssl" do
-    notifies :reload, resources(:service=>"apache2")
-  end
-  template "/etc/apache2/httpd.conf" do
-    notifies :reload, resources(:service=>"apache2")
-  end
 else
   execute "a2dissite default-ssl"
   execute "a2ensite default" do
-    notifies :reload, resources(:service=>"apache2")
-  end
+end
+
+template "/etc/apache2/httpd.conf" do
+  notifies :reload, resources(:service=>"apache2")
 end
