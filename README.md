@@ -30,4 +30,8 @@ run recipe
 # Contact
 see metadata.rb
 
+# TODO
+- fix vmail (mailbox transport or virtual boxes)
+- test mysql installation
+- test auto-installation by packages
 
