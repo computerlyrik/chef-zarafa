@@ -249,12 +249,3 @@ execute "a2enmod rewrite"
   notifies :reload, resources(:service=>"apache2")
 end
 
-template "/etc/apache2/sites-available/zarafa-webapp" do
-  notifies :reload, resources(:service=>"apache2")
-end
-
-template "/etc/apache2/sites-available/zarafa-webaccess" do
-  notifies :reload, resources(:service=>"apache2")
-end
-
-
