@@ -154,7 +154,6 @@ directory "/var/spool/postfix/var/run/saslauthd" do
   owner "postfix"
 end
 
-#TODO CONFIGURE MAILDIR
 
 ##CONFIGURE MYSQL SERVER#################################
 
@@ -183,8 +182,7 @@ end
 
 ##CONFIGURE ZARAFA#########################################
 
-#install.sh
-#TODO
+#TODO: EMUALATE install.sh
 
 #for zarafa webapp
 directory "/var/lib/zarafa-webapp/tmp" do
@@ -244,7 +242,6 @@ if node[:zarafa][:ssl]
   execute "a2ensite default-ssl" do
     notifies :reload, resources(:service=>"apache2")
   end
-  ##Setup global rewrite #TODO setup z-push in another way
   template "/etc/apache2/httpd.conf" do
     notifies :reload, resources(:service=>"apache2")
   end
