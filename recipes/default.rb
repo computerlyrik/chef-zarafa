@@ -18,9 +18,7 @@
 #
 
 if not node[:zarafa][:backend_type]
-
-# TODO: FAIL 
-
+  Chef::Application.fatal!("Set node['zarafa']['backend_type'] !")
 end 
 
 #TODO: ARCHITECTURE INDEPENDENCY, wget correct zarafa-version, apt-get dependencies of zarafa debian packages
