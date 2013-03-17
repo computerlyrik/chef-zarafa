@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-if not node[:zarafa][:backend_type]
+if node[:zarafa][:backend_type].nil?
   Chef::Application.fatal!("Set node['zarafa']['backend_type'] !")
 end 
 
@@ -55,15 +55,17 @@ end
 package "postfix"
 
 if node[:zarafa][:backend_type] == 'mysql'
-package "postfix-mysql"
-# check if really needed
-#package "postfix-pcre"
-#package "postfix-cdb"
+  package "postfix-mysql"
+  # check if really needed
+  #package "postfix-pcre"
+  #package "postfix-cdb"
 end
 
 if node[:zarafa][:backend_type] == 'ldap'
-package "postfix-ldap"
+  package "postfix-ldap"
 end
+
+
 service "postfix" do
   supports :restart => true
 end
@@ -75,43 +77,45 @@ execute "postmap catchall" do
 end
 
 if node[:zarafa][:backend_type] == 'ldap'
-ldap_server = search(:node, "recipes:openldap\\:\\:users && domain:#{node['domain']}").first
 
-template "/etc/postfix/ldap-aliases.cf" do
-  variables ({:ldap_server => ldap_server})
-  notifies :restart, resources(:service => "postfix")
-end
+  ldap_server = search(:node, "recipes:openldap\\:\\:users && domain:#{node['domain']}").first
 
-template "/etc/postfix/ldap-users.cf" do
-  variables ({:ldap_server => ldap_server})
-  notifies :restart, resources(:service => "postfix")
-end
+  template "/etc/postfix/ldap-aliases.cf" do
+    variables ({:ldap_server => ldap_server})
+    notifies :restart, resources(:service => "postfix")
+  end
+
+  template "/etc/postfix/ldap-users.cf" do
+    variables ({:ldap_server => ldap_server})
+    notifies :restart, resources(:service => "postfix")
+  end
+
 end
 
 if node[:zarafa][:backend_type] == 'mysql'
-execute "postmap -q #{node['zarafa']['catchall']} mysql-aliases.cf" do
-  action :nothing
-  cwd "/etc/postfix"
-  notifies :restart, resources(:service => "postfix")
-end
+  execute "postmap -q #{node['zarafa']['catchall']} mysql-aliases.cf" do
+    action :nothing
+    cwd "/etc/postfix"
+    notifies :restart, resources(:service => "postfix")
+  end
 
-template "/etc/postfix/mysql-aliases.cf" do
-  notifies :run, resources(:execute => "postmap -q #{node['zarafa']['catchall']} mysql-aliases.cf")
-  notifies :restart, resources(:service => "postfix")
-end
+  template "/etc/postfix/mysql-aliases.cf" do
+    notifies :run, resources(:execute => "postmap -q #{node['zarafa']['catchall']} mysql-aliases.cf")
+    notifies :restart, resources(:service => "postfix")
+  end
 
-#catchall mysql mapping
+  #catchall mysql mapping
 
-execute "postmap -q #{node['zarafa']['catchall']} email2email.cf" do
-  action :nothing
-  cwd "/etc/postfix"
-  notifies :restart, resources(:service => "postfix")
-end
+  execute "postmap -q #{node['zarafa']['catchall']} email2email.cf" do
+    action :nothing
+    cwd "/etc/postfix"
+    notifies :restart, resources(:service => "postfix")
+  end
 
-template "/etc/postfix/mysql-email2email.cf" do
-  notifies :run, resources(:execute => "postmap -q #{node['zarafa']['catchall']} email2email.cf")
-  notifies :restart, resources(:service => "postfix")
-end
+  template "/etc/postfix/mysql-email2email.cf" do
+    notifies :run, resources(:execute => "postmap -q #{node['zarafa']['catchall']} email2email.cf")
+    notifies :restart, resources(:service => "postfix")
+  end
 end
 
 if not node['zarafa']['catchall'].nil?
@@ -140,9 +144,9 @@ template "/etc/default/saslauthd" do
 end
 
 if node[:zarafa][:vmail_user]
-template "/etc/postfix/master.cf" do
-  notifies :restart, resources(:service => "postfix")
-end
+  template "/etc/postfix/master.cf" do
+    notifies :restart, resources(:service => "postfix")
+  end
 end
 
 #set permissions for postfix
@@ -210,10 +214,10 @@ service "zarafa-gateway" do
 end
 
 if node[:zarafa][:backend_type] == 'ldap'
-template "/etc/zarafa/ldap.cfg" do
-  variables ({:ldap_server => ldap_server})
-  notifies :restart, resources(:service=>"zarafa-server")
-end
+  template "/etc/zarafa/ldap.cfg" do
+    variables ({:ldap_server => ldap_server})
+    notifies :restart, resources(:service=>"zarafa-server")
+  end
 end
 
 template "/etc/zarafa/server.cfg" do
@@ -223,27 +227,28 @@ end
 template "/etc/zarafa/gateway.cfg" do
   notifies :restart, resources(:service=>"zarafa-gateway")
 end
+
 if node[:zarafa][:vmail_user]
-directory "/var/log/zarafa/" do
-  mode "755"
-  owner node[:zarafa][:vmail_user]
-  group node[:zarafa][:vmail_user]
-end
+  directory "/var/log/zarafa/" do
+    mode "755"
+    owner node[:zarafa][:vmail_user]
+    group node[:zarafa][:vmail_user]
+  end
 end
 
 # enable ssl
 if node[:zarafa][:ssl]
-bash "enable https" do
-  cwd Chef::Config[:file_cache_path]
-  code <<-EOF
-   a2enmod ssl
-   a2ensite default-ssl
-  EOF
-  notifies :reload, resources(:service=>"apache2")
-end
+  bash "enable https" do
+    cwd Chef::Config[:file_cache_path]
+    code <<-EOF
+     a2enmod ssl
+     a2ensite default-ssl
+    EOF
+    notifies :reload, resources(:service=>"apache2")
+  end
 end
 
-execute "a2enmod rewrite"
+execute "a2enmod rewrite" do
   notifies :reload, resources(:service=>"apache2")
 end
 
