@@ -238,17 +238,19 @@ end
 
 # enable ssl
 if node[:zarafa][:ssl]
-  bash "enable https" do
-    cwd Chef::Config[:file_cache_path]
-    code <<-EOF
-     a2enmod ssl
-     a2ensite default-ssl
-    EOF
+  execute "a2enmod ssl"
+  execute "a2enmod rewrite"
+  execute "a2dissite default"
+  execute "a2ensite default-ssl" do
+    notifies :reload, resources(:service=>"apache2")
+  end
+  ##Setup global rewrite #TODO setup z-push in another way
+  template "/etc/apache2/httpd.conf" do
+    notifies :reload, resources(:service=>"apache2")
+  end
+else
+  execute "a2dissite default-ssl"
+  execute "a2ensite default" do
     notifies :reload, resources(:service=>"apache2")
   end
 end
-
-execute "a2enmod rewrite" do
-  notifies :reload, resources(:service=>"apache2")
-end
-
