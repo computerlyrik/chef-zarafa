@@ -239,10 +239,10 @@ if node[:zarafa][:ssl]
   execute "a2enmod ssl"
   execute "a2enmod rewrite"
   execute "a2dissite default"
-  execute "a2ensite default-ssl" do
+  execute "a2ensite default-ssl"
 else
   execute "a2dissite default-ssl"
-  execute "a2ensite default" do
+  execute "a2ensite default"
 end
 
 template "/etc/apache2/httpd.conf" do
