@@ -629,14 +629,15 @@ ServerIdent		"localhost.localdomain"
 # you are running the client and server on the same machine, as it eliminates
 # much of the bandwidth overhead.
 #
-ServerDomainSocketPath	"/var/run/dspam/dspam.sock"
+ServerDomainSocketPath	"/var/spool/postfix/var/run/dspam/dspam.sock"
 
 #
 # Client Mode: If you are running DSPAM in client/server mode, uncomment and
 # set these variables. A ClientHost beginning with a / will be treated as
 # a domain socket.
 #
-ClientHost	/var/run/dspam/dspam.sock
+#Setup socket in postfix chroot
+ClientHost	/var/spool/postfix/var/run/dspam/dspam.sock
 ClientIdent	"secret@Relay1"
 #
 #ClientHost	127.0.0.1
