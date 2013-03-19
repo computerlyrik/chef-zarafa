@@ -4,6 +4,7 @@ include_recipe "dspam"
 
 node.set["clamav"]["clamd"]["tcp_socket"] = 3310
 node.set["clamav"]["clamd"]["tcp_addr"] = "127.0.0.1"
+node.set["clamav"]["clamd"]["enabled"] = true
 include_recipe "clamav"
 
 #template "/etc/dspam/dspam.conf"
