@@ -9,6 +9,7 @@
 #               (yes)   (yes)   (yes)   (never) (100)
 # ==========================================================================
 smtp      inet  n       -       -       -       -       smtpd
+ -o content_filter=lmtp:unix:/var/run/dspam/dspam.sock
 #smtp      inet  n       -       -       -       1       postscreen
 #smtpd     pass  -       -       -       -       -       smtpd
 #dnsblog   unix  -       -       -       -       0       dnsblog
@@ -110,5 +111,17 @@ scalemail-backend unix	-	n	n	-	2	pipe
 mailman   unix  -       n       n       -       -       pipe
   flags=FR user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py
   ${nexthop} ${user}
-zarafa    unix  -	n	n 	-	 10	 pipe
-  flags=DRhu user=vmail argv=/usr/bin/zarafa-dagent -R ${recipient}
+
+#TODO ????
+# dspam
+127.0.0.1:10026 inet    n       -       n       -       -       smtpd
+        -o content_filter=
+        -o receive_override_options=no_unknown_recipient_checks,no_header_body_checks
+        -o smtpd_helo_restrictions=
+        -o smtpd_client_restrictions=
+        -o smtpd_sender_restrictions=
+        -o smtpd_recipient_restrictions=permit_mynetworks,reject
+        -o mynetworks=127.0.0.0/8
+        -o smtpd_authorized_xforward_hosts=127.0.0.0/8
+#zarafa    unix  -	n	n 	-	 10	 pipe
+#  flags=DRhu user=vmail argv=/usr/bin/zarafa-dagent -R ${recipient}
