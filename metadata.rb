@@ -10,6 +10,6 @@ version          "1.1.0"
   supports os
 end
 
-%w{ openssl database openldap }.each do |dep|
+%w{ openssl database openldap clamav dspam }.each do |dep|
   depends dep
 end

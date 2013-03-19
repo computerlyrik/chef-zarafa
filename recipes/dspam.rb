@@ -1,5 +1,8 @@
+
 include_recipe "dspam"
 
-template "/etc/dspam/dspam.conf"
+include_recipe "clamav"
+
+#template "/etc/dspam/dspam.conf"
 
 
