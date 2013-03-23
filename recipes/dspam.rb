@@ -19,7 +19,7 @@ template "/etc/postfix/master.cf" do
 end
 
 ##configure chrooted postfix
-directory "/var/spool/postfix/var/run/dspam/dspam.sock" do
+directory "/var/spool/postfix/var/run/dspam" do
   owner "dspam"
 end
 
