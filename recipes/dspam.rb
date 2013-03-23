@@ -18,6 +18,10 @@ template "/etc/postfix/master.cf" do
   notifies :restart, resources(:service => "postfix")
 end
 
+##configure chrooted postfix
+directory "/var/spool/postfix/var/run/dspam/dspam.sock" do
+  owner "dspam"
+end
 
 template "/etc/dspam/dspam.conf" do
   notifies :restart, resources(:service => "dspam")
