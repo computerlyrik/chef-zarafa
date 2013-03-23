@@ -55,7 +55,8 @@ virtual_alias_maps = ldap:/etc/postfix/ldap-aliases.cf<%if not node['zarafa']['c
 <%end%>
 
 <%if node[:zarafa][:backend_type] == 'mysql'%>
-virtual_alias_maps = mysql:/etc/postfix/mysql-aliases.cf, mysql:/etc/postfix/mysql-email2email.cf, hash:/etc/postfix/catchall
+#virtual_alias_maps = mysql:/etc/postfix/mysql-aliases.cf, mysql:/etc/postfix/mysql-email2email.cf, hash:/etc/postfix/catchall
+virtual_alias_maps = hash:/etc/postfix/catchall
 <%end%>
 
 virtual_transport = lmtp:127.0.0.1:2003
