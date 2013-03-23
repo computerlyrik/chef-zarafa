@@ -91,7 +91,7 @@ if node[:zarafa][:backend_type] == 'ldap'
   end
 
 end
-
+=begin
 if node[:zarafa][:backend_type] == 'mysql'
   execute "postmap -q #{node['zarafa']['catchall']} mysql-aliases.cf" do
     action :nothing
@@ -117,7 +117,7 @@ if node[:zarafa][:backend_type] == 'mysql'
     notifies :restart, resources(:service => "postfix")
   end
 end
-
+=end
 if not node['zarafa']['catchall'].nil?
   template "/etc/postfix/catchall" do
     notifies :run, resources(:execute => "postmap catchall")
