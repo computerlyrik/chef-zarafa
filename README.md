@@ -1,5 +1,7 @@
 # Description
 
+Code Repo: http://github.com/computerlyrik/chef-zarafa
+
 Motivated by freeing mobile devices:
 
 Setup Zarafa to 
