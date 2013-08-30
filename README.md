@@ -1,3 +1,5 @@
+
+[![Build Status](https://travis-ci.org/computerlyrik/chef-zarafa.png)](https://travis-ci.org/computerlyrik/chef-zarafa)
 # Description
 
 Code Repo: http://github.com/computerlyrik/chef-zarafa
