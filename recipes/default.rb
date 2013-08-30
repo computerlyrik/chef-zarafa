@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-if node[:zarafa][:backend_type].nil?
+if node['zarafa']['backend_type'].nil?
   Chef::Application.fatal!("Set node['zarafa']['backend_type'] !")
 end 
 
@@ -80,7 +80,12 @@ end
 
 if node['zarafa']['backend_type'] == 'ldap'
 
-  ldap_server = search(:node, "recipes:openldap\\:\\:users && domain:#{node['domain']}").first
+  if Chef::Config[:solo]
+    Chef::Log.warn("This recipe uses search. Chef Solo does not support search. Ldap search will not be executed")
+    break
+  else
+    ldap_server = search(:node, "recipes:openldap\\:\\:users && domain:#{node['domain']}").first
+  end
 
   template "/etc/postfix/ldap-aliases.cf" do
     variables ({:ldap_server => ldap_server})
@@ -93,6 +98,7 @@ if node['zarafa']['backend_type'] == 'ldap'
   end
 
 end
+
 =begin
 if node[:zarafa][:backend_type] == 'mysql'
   execute "postmap -q #{node['zarafa']['catchall']} mysql-aliases.cf" do
