@@ -5,6 +5,6 @@ gem 'rake'
 gem 'foodcritic'
 
 group :integration do
-  gem 'test-kitchen'
+  gem 'test-kitchen', '1.0.0.alpha.7'
   gem 'kitchen-docker'
 end
