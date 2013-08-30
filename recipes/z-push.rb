@@ -20,7 +20,7 @@
 #end
 
 template "/usr/share/z-push/config.php" do
-  notifies :restart, resources(:service=>"zarafa-server")
+  notifies :restart, "service[zarafa-server]"
 end
 
 directory "/var/lib/z-push" do
@@ -36,6 +36,6 @@ directory "/var/log/z-push" do
 end
 
 template "/etc/apache2/conf.d/z-push" do
-  notifies :reload, resources(:service=>"apache2")
+  notifies :reload, "service[apache2]"
 end
 

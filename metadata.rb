@@ -1,3 +1,4 @@
+name             "zarafa"
 maintainer       "computerlyrik"
 maintainer_email "chef-cookbooks@computerlyrik.de"
 license          "Apache 2.0"
@@ -10,6 +11,6 @@ version          "1.3.0"
   supports os
 end
 
-%w{ openssl database openldap clamav dspam }.each do |dep|
+%w{ openssl database mysql openldap clamav dspam }.each do |dep|
   depends dep
 end
