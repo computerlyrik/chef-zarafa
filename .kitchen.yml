@@ -1,30 +1,37 @@
 ---
-driver_plugin: docker
+driver_plugin: vagrant
 driver_config:
-  docker_path: lxc-docker
+    require_chef_omnibus: latest
 
 platforms:
+- name: ubuntu-12.10
+  run_list:
+  - recipe[apt]
 - name: ubuntu-12.04
-  driver_config:
-    image: ubuntu:12.04
-    platform: ubuntu
-
-- name: ubuntu-10.04
-  driver_config:
-    image: ubuntu:10.04
-    platform: ubuntu
-
-- name: centos-6.4
-  driver_config:
-   image: centos:6.4
-   platform: rhel
-
-- name: centos-5.9
-  driver_config:
-   image: centos:5.9
-   platform: rhel
-
+  run_list:
+  - recipe[apt]
 suites:
-- name: default
-  run_list: ["recipe[zarafa]"]
-  attributes: {}
+- name: ldap
+  run_list:
+    - recipe[zarafa::ldap]
+    - recipe[zarafa-test::ldap]
+    - recipe[minitest-handler]
+  attributes:
+    zarafa:
+      rootpw: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/" # secretsauce
+      basedn: "dc=example, dc=com"
+      server: "ldap.example.com"
+      preseed_dir: "/tmp/does_not_exist"
+
+- name: mysql
+  run_list:
+    - recipe[zarafa::mysql]
+    - recipe[zarafa-test::mysql]
+    - recipe[minitest-handler]
+  attributes:
+    zarafa:
+      manage_ssl: false
+      rootpw: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/" # secretsauce
+      basedn: "dc=example, dc=com"
+      server: "ldap.example.com"
+      preseed_dir: "/tmp/does_not_exist"
