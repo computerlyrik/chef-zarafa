@@ -14,24 +14,19 @@ suites:
 - name: ldap
   run_list:
     - recipe[zarafa::ldap]
-    - recipe[zarafa-test::ldap]
     - recipe[minitest-handler]
   attributes:
     zarafa:
-      rootpw: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/" # secretsauce
-      basedn: "dc=example, dc=com"
-      server: "ldap.example.com"
-      preseed_dir: "/tmp/does_not_exist"
+      backend_type = "ldap"
 
 - name: mysql
   run_list:
     - recipe[zarafa::mysql]
-    - recipe[zarafa-test::mysql]
     - recipe[minitest-handler]
   attributes:
     zarafa:
-      manage_ssl: false
-      rootpw: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/" # secretsauce
-      basedn: "dc=example, dc=com"
-      server: "ldap.example.com"
-      preseed_dir: "/tmp/does_not_exist"
+      backend_type = "mysql"
+
+- name: ldap_server
+  run_list:
+    - recipe[zarafa::ldap_server]
