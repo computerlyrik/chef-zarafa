@@ -10,12 +10,12 @@ include_recipe "clamav"
 #template "/etc/dspam/dspam.conf"
 
 template "/etc/postfix/dspam_filter_access" do
-  notifies :restart, "service[postfix]")
+  notifies :restart, "service[postfix]"
 end
 
 
 template "/etc/postfix/master.cf" do
-  notifies :restart, "service[postfix]")
+  notifies :restart, "service[postfix]"
 end
 
 ##configure chrooted postfix
@@ -24,7 +24,7 @@ directory "/var/spool/postfix/var/run/dspam" do
 end
 
 template "/etc/dspam/dspam.conf" do
-  notifies :restart, "service[dspam]")
-  notifies :restart, "service[postfix]")
+  notifies :restart, "service[dspam]"
+  notifies :restart, "service[postfix]"
 end
 
