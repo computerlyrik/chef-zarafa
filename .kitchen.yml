@@ -1,41 +1,55 @@
 ---
 driver_plugin: vagrant
 driver_config:
-    require_chef_omnibus: latest
+    require_chef_omnibus: 11.6.2
 
 platforms:
 - name: ubuntu-12.10
+  network:
+    - ["forwarded_port", {guest: 80, host: 8080, guest: 443, host: 8443}]
   run_list:
   - recipe[apt]
 - name: ubuntu-12.04
+  network:
+    - ["forwarded_port", {guest: 80, host: 8080, guest: 443, host: 8444}]
   run_list:
   - recipe[apt]
 suites:
 - name: ldap
   run_list:
-    - recipe[zarafa::ldap]
+    - recipe[openldap::server]
+    - recipe[zarafa::ldap_server]
+    - recipe[zarafa::ldap_users]
     - recipe[minitest-handler]
   attributes:
     zarafa:
       backend_type = "ldap"
+    openldap:
+      rootpw: secretsauce
+      roothash: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/"
+      preseed_dir: "/tmp/does_not_exist"
+
+- name: ldap_complete
+  run_list:
+    - recipe[openldap::server]
+    - recipe[zarafa::ldap_server]
+    - recipe[zarafa::ldap_users]
+    - recipe[zarafa]
+    - recipe[phpldapadmin]
+    - recipe[minitest-handler]
+  attributes:
+    zarafa:
+      backend_type = "ldap"
+    openldap:
+      rootpw: secretsauce
+      roothash: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/"
+      preseed_dir: "/tmp/does_not_exist"
 
 - name: mysql
   run_list:
-    - recipe[zarafa::mysql]
+    - recipe[zarafa]
     - recipe[minitest-handler]
   attributes:
     zarafa:
       backend_type = "mysql"
 
-- name: ldap_server
-  run_list:
-    - recipe[openldap::master]
-    - recipe[zarafa::ldap_users]
-    - recipe[zarafa::ldap_server]
-#    - recipe[phpldapadmin]
-  attributes:
-    openldap:
-      rootpw: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/" # secretsauce
-      basedn: "dc=example, dc=com"
-      server: "ldap.example.com"
-      preseed_dir: "/tmp/does_not_exist"
