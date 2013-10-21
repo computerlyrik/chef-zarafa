@@ -32,7 +32,7 @@ suites:
     - recipe[openldap::master]
     - recipe[zarafa::ldap_users]
     - recipe[zarafa::ldap_server]
-    - recipe[phpldapadmin]
+#    - recipe[phpldapadmin]
   attributes:
     openldap:
       rootpw: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/" # secretsauce
