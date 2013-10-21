@@ -24,7 +24,7 @@ include_recipe "openldap::server"
 
 #service "slapd"
 
-'''
+=begin
 openldap_config "cn=config" do
   attributes ({
     :olcArgsFile => "#{node['openldap']['run_dir']}/slapd.args",
@@ -32,7 +32,7 @@ openldap_config "cn=config" do
     :olcLogLevel => node['openldap']['loglevel']
   })
 end
-'''
+=end
 
 #by default activated schemas
 #cn={0}core.ldif
