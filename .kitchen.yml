@@ -29,4 +29,13 @@ suites:
 
 - name: ldap_server
   run_list:
+    - recipe[openldap::master]
+    - recipe[zarafa::ldap_users]
     - recipe[zarafa::ldap_server]
+    - recipe[phpldapadmin]
+  attributes:
+    openldap:
+      rootpw: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/" # secretsauce
+      basedn: "dc=example, dc=com"
+      server: "ldap.example.com"
+      preseed_dir: "/tmp/does_not_exist"

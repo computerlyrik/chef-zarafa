@@ -17,12 +17,14 @@
 # limitations under the License.
 #
 
-
 include_recipe "openldap::server"
-include_recipe "openssl::password"
+
+
+::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
 
 #service "slapd"
 
+'''
 openldap_config "cn=config" do
   attributes ({
     :olcArgsFile => "#{node['openldap']['run_dir']}/slapd.args",
@@ -30,38 +32,7 @@ openldap_config "cn=config" do
     :olcLogLevel => node['openldap']['loglevel']
   })
 end
-
-
-unless node['openldap']['admin_password']
-  node.set['openldap']['admin_password']= secure_password
-  admin_pass = Chef::ShellOut.new("slappasswd -h {ssha} -s #{node['openldap']['admin_password']}").run_command
-#    Chef::Log.info(admin_pass)
-  node.set['openldap']['admin_hash']= admin_pass.stdout.chomp
-end
-
-openldap_config "olcDatabase={1}hdb,cn=config" do
-  attributes ({
-    :olcDbDirectory => node['openldap']['db_dir'],
-    :olcSuffix => node['openldap']['basedn'],
-    :olcAccess => [ 
-      "{0}to attrs=userPassword,shadowLastChange 
-          by self write 
-          by anonymous auth 
-          by dn=\"#{node['openldap']['admin_binddn']}\" write 
-          by dn=\"#{node['openldap']['anon_binddn']}\" read 
-          by * none",
-      "{1}to dn.base="" 
-          by * read",
-      "{2}to * 
-          by self write 
-          by dn=\"#{node['openldap']['admin_binddn']}\" write 
-          by dn=\"#{node['openldap']['anon_binddn']}\" read"
-    ],
-    :olcLastMod => "TRUE",
-    :olcRootDN => node['openldap']['admin_binddn'],
-    :olcRootPW => node['openldap']['admin_hash']
-  })
-end
+'''
 
 #by default activated schemas
 #cn={0}core.ldif
@@ -69,21 +40,6 @@ end
 #cn={2}nis.ldif
 #cn={3}inetorgperson.ldif
 
-#Anon User
-unless node['openldap']['anon_pass']
-  node.set['openldap']['anon_pass']= secure_password
-  anon_pass = Chef::ShellOut.new("slappasswd -h {ssha} -s #{node['openldap']['anon_pass']}").run_command
-  node.set['openldap']['anon_hash']= anon_pass.stdout.chomp
-end
-
-
-openldap_node node['openldap']['anon_binddn'] do
-  attributes ({
-    :objectClass => ["account","simpleSecurityObject","top"],
-    :uid => node['openldap']['anon_user'],
-    :userPassword => node['openldap']['anon_hash']
-  })
-end
 
 
 
