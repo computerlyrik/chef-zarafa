@@ -18,9 +18,9 @@ suites:
 - name: ldap
   run_list:
     - recipe[openldap::server]
-    - recipe[zarafa::ldap_server]
-    - recipe[zarafa::ldap_users]
-    - recipe[minitest-handler]
+    - recipe[openldap::users]
+    - recipe[zarafa::ldap_additions]
+#    - recipe[minitest-handler]
   attributes:
     zarafa:
       backend_type = "ldap"
@@ -28,15 +28,20 @@ suites:
       rootpw: secretsauce
       roothash: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/"
       preseed_dir: "/tmp/does_not_exist"
+    mysql:
+      server_debian_password: test
+      server_backup_password: test
+      server_root_password: test
+      server_repl_password: test
 
 - name: ldap_complete
   run_list:
     - recipe[openldap::server]
-    - recipe[zarafa::ldap_server]
-    - recipe[zarafa::ldap_users]
+    - recipe[openldap::users]
+    - recipe[zarafa::ldap_additions]
     - recipe[zarafa]
     - recipe[phpldapadmin]
-    - recipe[minitest-handler]
+#    - recipe[minitest-handler]
   attributes:
     zarafa:
       backend_type = "ldap"
@@ -44,12 +49,22 @@ suites:
       rootpw: secretsauce
       roothash: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/"
       preseed_dir: "/tmp/does_not_exist"
+    mysql:
+      server_debian_password: test
+      server_backup_password: test
+      server_root_password: test
+      server_repl_password: test
 
 - name: mysql
   run_list:
     - recipe[zarafa]
-    - recipe[minitest-handler]
+#    - recipe[minitest-handler]
   attributes:
     zarafa:
       backend_type = "mysql"
+    mysql:
+      server_debian_password: test
+      server_backup_password: test
+      server_root_password: test
+      server_repl_password: test
 
