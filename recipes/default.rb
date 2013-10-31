@@ -115,8 +115,9 @@ end
 ## Setup Config for smtp auth
 package "sasl2-bin"
 
+#TODO debug why is not
 service "saslauthd" do
-  supports :restart => true
+  action [:enable, :start]
 end
 
 template "/etc/postfix/sasl/smtpd.conf" do
@@ -124,6 +125,7 @@ template "/etc/postfix/sasl/smtpd.conf" do
 end
 
 template "/etc/default/saslauthd" do
+  notifies :restart, "service[saslauthd]", :immediately
   notifies :restart, "service[postfix]"
 end
 
@@ -144,6 +146,7 @@ node.set['mysql']['bind_address'] = "127.0.0.1"
 
 include_recipe "mysql::server"
 include_recipe "database::mysql"
+
 mysql_connection_info = {:host => "localhost", :username => 'root', :password => node['mysql']['server_root_password']}
 
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
@@ -183,8 +186,15 @@ end
 
 execute "/usr/local/zarafa/install.sh" do
   cwd "/usr/local/zarafa"
+  ignore_failure true
   action :nothing
   subscribes :run, "ark[zarafa]", :immediately
+end
+
+execute "apt-get install -f -y" do
+  action :nothing
+  subscribes :run,  "execute[/usr/local/zarafa/install.sh]", :immediately
+  notifies :run, "execute[/usr/local/zarafa/install.sh]"
 end
 #TODO: FAIL and run install.sh
 
