@@ -195,9 +195,6 @@ directory "/var/lib/zarafa-webapp/tmp" do
   mode 0755
 end
 
-#NOT needed: a2ensite zarafa-webapp => reload
-#NOT needed: a2ensite zarafa-webaccess => reload
-
 
 
 #not necessary - got by program itself package "php-gettext"
@@ -250,3 +247,4 @@ end
 template "/etc/apache2/httpd.conf" do
   notifies :reload, "service[apache2]"
 end
+
