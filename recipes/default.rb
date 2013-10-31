@@ -165,7 +165,28 @@ end
 
 ##CONFIGURE ZARAFA#########################################
 
-#TODO: EMUALATE install.sh
+# Get and unpack the installer
+host = "http://download.zarafa.com/community/final"
+major = "7.1"
+minor = "7.1.7-42779"
+type = "free" #opensource
+
+os = "debian"
+os_version = "7.0"
+arch = "x86_64"
+
+url = "#{host}/#{major}/#{minor}/zcp-#{minor}-#{os}-#{os_version}-#{arch}-#{type}.tar.gz"
+
+ark "zarafa" do
+  url url
+end
+
+execute "/usr/local/zarafa/install.sh" do
+  cwd "/usr/local/zarafa"
+  action :nothing
+  subscribes :run, "ark[zarafa]", :immediately
+end
+#TODO: FAIL and run install.sh
 
 #for zarafa webapp
 directory "/var/lib/zarafa-webapp/tmp" do
