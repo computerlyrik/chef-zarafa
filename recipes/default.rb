@@ -182,6 +182,7 @@ url = "#{host}/#{major}/#{minor}/zcp-#{minor}-#{os}-#{os_version}-#{arch}-#{type
 
 ark "zarafa" do
   url url
+  not_if { ::File.exist? "/usr/local/zarafa" }
 end
 
 execute "/usr/local/zarafa/install.sh" do
@@ -193,8 +194,7 @@ end
 
 execute "apt-get install -f -y" do
   action :nothing
-  subscribes :run,  "execute[/usr/local/zarafa/install.sh]", :immediately
-  notifies :run, "execute[/usr/local/zarafa/install.sh]"
+  subscribes :run, "ark[zarafa]", :immediately
 end
 #TODO: FAIL and run install.sh
 
