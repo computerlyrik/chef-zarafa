@@ -5,19 +5,13 @@
 
 #TODO verify and setup installation process
 # TODO implement update process with notifies
-#remote_file "#{Chef::Config[:file_cache_path]}/z-push-2.0.7-1690.tar.gz" do
-#  source "http://zarafa-deutschland.de/z-push-download/final/2.0/z-push-2.0.7-1690.tar.gz"
-#  #checksum node['z-push']['checksum']
-#  mode "0644"
-#end
 
-#bash "get & install-z-push" do
-#  cwd Chef::Config[:file_cache_path]
-#  code <<-EOF
-#tar -xvf z-push-2.0.7-1690.tar.gz
-#(mkdir -p /usr/share/z-push && cp -R z-push-2.0.7-1690/* /usr/share/z-push)
-#EOF
-#end
+major = "2.1"
+minor = "2.1.0-1750"
+ark "z-push" do
+  url "http://zarafa-deutschland.de/z-push-download/final/#{major}/z-push-#{minor}.tar.gz"
+  not_if { ::File.exist? "/usr/local/z-push" }
+end
 
 template "/usr/share/z-push/config.php" do
   notifies :restart, "service[zarafa-server]"
