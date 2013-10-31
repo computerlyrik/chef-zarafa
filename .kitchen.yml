@@ -68,7 +68,8 @@ suites:
 #    - recipe[minitest-handler]
   attributes:
     zarafa:
-      backend_type = "mysql"
+      backend_type: mysql
+      mysql_password: test
     mysql:
       server_debian_password: test
       server_backup_password: test
