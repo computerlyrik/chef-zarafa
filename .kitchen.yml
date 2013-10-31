@@ -30,7 +30,8 @@ suites:
 #    - recipe[minitest-handler]
   attributes:
     zarafa:
-      backend_type = "ldap"
+      backend_type: ldap
+      mysql_password: test
     openldap:
       rootpw: secretsauce
       roothash: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/"
@@ -51,7 +52,8 @@ suites:
 #    - recipe[minitest-handler]
   attributes:
     zarafa:
-      backend_type = "ldap"
+      backend_type: ldap
+      mysql_password: test
     openldap:
       rootpw: secretsauce
       roothash: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/"
