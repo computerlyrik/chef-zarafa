@@ -21,25 +21,7 @@ if node['zarafa']['backend_type'].nil?
   Chef::Application.fatal!("Set node['zarafa']['backend_type'] !")
 end 
 
-#TODO: ARCHITECTURE INDEPENDENCY, wget correct zarafa-version, apt-get dependencies of zarafa debian packages
-#wget http://download.zarafa.com/community/final/7.0/7.0.8-35178/zcp-7.0.8-35178-ubuntu-12.04-x86_64-free.tar.gz
-#unzip
 
-#remote_file "#{Chef::Config[:file_cache_path]}/zcp-7.1.0-36420-ubuntu-12.04-i386-free.tar.gz" do
-#  source "http://download.zarafa.com/community/final/7.1/7.1.0-36420/zcp-7.1.0-36420-ubuntu-12.04-i386-free.tar.gz"
-#  checksum node['zarafa']['checksum']
-#  mode "0644"
-#end
-
-## TODO apt-get -f install issue: get deps from .debs and preinstall
-
-#bash "build-and-install-zarafa" do
-#  cwd Chef::Config[:file_cache_path]
-#  code <<-EOF
-#tar -xvf zcp-7.1.0-36420-ubuntu-12.04-i386-free.tar.gz
-#(cd zcp-7.1.0-36420-ubuntu-12.04-i386 && dpkg -i lib* && dpkg -i php* && dpkg -i kyoto* && dpkg -i python* && dpkg -i zarafa* && apt-get install -f)
-#EOF
-#end
 
 ##CONFIGURE APACHE SERVER##########################
 package "apache2"
@@ -62,7 +44,6 @@ end
   #package "postfix-pcre"
   #package "postfix-cdb"
 
-
 package "postfix-ldap" do
   only_if {node['zarafa']['backend_type'] == 'ldap'}
 end
@@ -72,17 +53,9 @@ service "postfix" do
   supports :restart => true
 end
 
-execute "postmap catchall" do
-  action :nothing
-  cwd "/etc/postfix"
-  notifies :restart, "service[postfix]"
-end
-
 if node['zarafa']['backend_type'] == 'ldap'
-
-  if Chef::Config[:solo]
+  if Chef::Config['solo']
     Chef::Log.warn("This recipe uses search. Chef Solo does not support search. Ldap search will not be executed")
-    break
   else
     ldap_server = search(:node, "recipes:openldap\\:\\:users && domain:#{node['domain']}").first
   end
@@ -96,9 +69,7 @@ if node['zarafa']['backend_type'] == 'ldap'
     variables ({:ldap_server => ldap_server})
     notifies :restart, "service[postfix]"
   end
-
 end
-
 =begin
 if node[:zarafa][:backend_type] == 'mysql'
   execute "postmap -q #{node['zarafa']['catchall']} mysql-aliases.cf" do
@@ -126,6 +97,11 @@ if node[:zarafa][:backend_type] == 'mysql'
   end
 end
 =end
+execute "postmap catchall" do
+  action :nothing
+  cwd "/etc/postfix"
+  notifies :restart, "service[postfix]"
+end
 
 template "/etc/postfix/catchall" do
   notifies :run, "execute[postmap catchall]"
