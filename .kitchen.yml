@@ -28,11 +28,6 @@ suites:
       rootpw: secretsauce
       roothash: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/"
       preseed_dir: "/tmp/does_not_exist"
-    mysql:
-      server_debian_password: test
-      server_backup_password: test
-      server_root_password: test
-      server_repl_password: test
 
 - name: ldap_complete
   run_list:
@@ -45,6 +40,7 @@ suites:
   attributes:
     zarafa:
       backend_type = "ldap"
+      mysql_password = "foobar"
     openldap:
       rootpw: secretsauce
       roothash: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/"
@@ -62,6 +58,7 @@ suites:
   attributes:
     zarafa:
       backend_type = "mysql"
+      mysql_password = "foobar"
     mysql:
       server_debian_password: test
       server_backup_password: test
