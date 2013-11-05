@@ -13,7 +13,7 @@ ark "z-push" do
   not_if { ::File.exist? "/usr/local/z-push" }
 end
 
-template "/usr/share/z-push/config.php" do
+template "/usr/local/z-push/config.php" do
   notifies :restart, "service[zarafa-server]"
 end
 
