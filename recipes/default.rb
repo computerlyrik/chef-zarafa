@@ -21,6 +21,7 @@ if node['zarafa']['backend_type'].nil?
   Chef::Application.fatal!("Set node['zarafa']['backend_type'] !")
 end 
 
+
 ##CONFIGURE APACHE SERVER##########################
 package "apache2"
 package "libapache2-mod-php5"
@@ -54,15 +55,8 @@ service "postfix" do
   supports :restart => true
 end
 
-execute "postmap catchall" do
-  action :nothing
-  cwd "/etc/postfix"
-  notifies :restart, "service[postfix]"
-end
-
 if node['zarafa']['backend_type'] == 'ldap'
-
-  if Chef::Config[:solo]
+  if Chef::Config['solo']
     Chef::Log.warn("This recipe uses search. Chef Solo does not support search. Ldap search will not be executed")
     ldap_server = node
   else
@@ -78,9 +72,7 @@ if node['zarafa']['backend_type'] == 'ldap'
     variables ({:ldap_server => ldap_server})
     notifies :restart, "service[postfix]"
   end
-
 end
-
 =begin
 if node[:zarafa][:backend_type] == 'mysql'
   execute "postmap -q #{node['zarafa']['catchall']} mysql-aliases.cf" do
@@ -108,6 +100,11 @@ if node[:zarafa][:backend_type] == 'mysql'
   end
 end
 =end
+execute "postmap catchall" do
+  action :nothing
+  cwd "/etc/postfix"
+  notifies :restart, "service[postfix]"
+end
 
 template "/etc/postfix/catchall" do
   notifies :run, "execute[postmap catchall]"
@@ -121,8 +118,9 @@ end
 ## Setup Config for smtp auth
 package "sasl2-bin"
 
+#TODO debug why is not
 service "saslauthd" do
-  supports :restart => true
+  action [:enable, :start]
 end
 
 template "/etc/postfix/sasl/smtpd.conf" do
@@ -130,6 +128,7 @@ template "/etc/postfix/sasl/smtpd.conf" do
 end
 
 template "/etc/default/saslauthd" do
+  notifies :restart, "service[saslauthd]", :immediately
   notifies :restart, "service[postfix]"
 end
 
@@ -150,6 +149,7 @@ node.set['mysql']['bind_address'] = "127.0.0.1"
 
 include_recipe "mysql::server"
 include_recipe "database::mysql"
+
 mysql_connection_info = {:host => "localhost", :username => 'root', :password => node['mysql']['server_root_password']}
 
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
@@ -171,7 +171,35 @@ end
 
 ##CONFIGURE ZARAFA#########################################
 
-#TODO: EMUALATE install.sh
+# Get and unpack the installer
+host = "http://download.zarafa.com/community/final"
+major = "7.1"
+minor = "7.1.7-42779"
+type = "free" #opensource
+
+os = "debian"
+os_version = "7.0"
+arch = "x86_64"
+
+url = "#{host}/#{major}/#{minor}/zcp-#{minor}-#{os}-#{os_version}-#{arch}-#{type}.tar.gz"
+
+ark "zarafa" do
+  url url
+  not_if { ::File.exist? "/usr/local/zarafa" }
+end
+
+execute "/usr/local/zarafa/install.sh" do
+  cwd "/usr/local/zarafa"
+  ignore_failure true
+  action :nothing
+  subscribes :run, "ark[zarafa]", :immediately
+end
+
+execute "apt-get install -f -y" do
+  action :nothing
+  subscribes :run, "ark[zarafa]", :immediately
+end
+#TODO: FAIL and run install.sh
 
 #for zarafa webapp
 directory "/var/lib/zarafa-webapp/tmp" do
@@ -179,9 +207,6 @@ directory "/var/lib/zarafa-webapp/tmp" do
   group "www-data"
   mode 0755
 end
-
-#NOT needed: a2ensite zarafa-webapp => reload
-#NOT needed: a2ensite zarafa-webaccess => reload
 
 
 
@@ -235,3 +260,4 @@ end
 template "/etc/apache2/httpd.conf" do
   notifies :reload, "service[apache2]"
 end
+

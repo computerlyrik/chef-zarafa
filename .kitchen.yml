@@ -14,6 +14,13 @@ platforms:
     - ["forwarded_port", {guest: 80, host: 8080, guest: 443, host: 8444}]
   run_list:
   - recipe[apt]
+- name: debian-7
+  driver_config:
+    box: opscode-debian-7.1
+    box_url: http://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_debian-7.1.0_provisionerless.box
+  run_list:
+  - recipe[apt]
+
 suites:
 - name: ldap
   run_list:
@@ -23,7 +30,8 @@ suites:
 #    - recipe[minitest-handler]
   attributes:
     zarafa:
-      backend_type = "ldap"
+      backend_type: ldap
+      mysql_password: test
     openldap:
       rootpw: secretsauce
       roothash: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/"
@@ -39,8 +47,8 @@ suites:
 #    - recipe[minitest-handler]
   attributes:
     zarafa:
-      backend_type = "ldap"
-      mysql_password = "foobar"
+      backend_type: ldap
+      mysql_password: test
     openldap:
       rootpw: secretsauce
       roothash: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/"
@@ -57,8 +65,8 @@ suites:
 #    - recipe[minitest-handler]
   attributes:
     zarafa:
-      backend_type = "mysql"
-      mysql_password = "foobar"
+      backend_type: mysql
+      mysql_password: test
     mysql:
       server_debian_password: test
       server_backup_password: test
