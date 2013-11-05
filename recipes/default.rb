@@ -82,7 +82,7 @@ if node['zarafa']['backend_type'] == 'ldap'
 
   if Chef::Config[:solo]
     Chef::Log.warn("This recipe uses search. Chef Solo does not support search. Ldap search will not be executed")
-    break
+    ldap_server = node
   else
     ldap_server = search(:node, "recipes:openldap\\:\\:users && domain:#{node['domain']}").first
   end
