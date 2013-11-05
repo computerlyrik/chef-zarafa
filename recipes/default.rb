@@ -21,26 +21,6 @@ if node['zarafa']['backend_type'].nil?
   Chef::Application.fatal!("Set node['zarafa']['backend_type'] !")
 end 
 
-#TODO: ARCHITECTURE INDEPENDENCY, wget correct zarafa-version, apt-get dependencies of zarafa debian packages
-#wget http://download.zarafa.com/community/final/7.0/7.0.8-35178/zcp-7.0.8-35178-ubuntu-12.04-x86_64-free.tar.gz
-#unzip
-
-#remote_file "#{Chef::Config[:file_cache_path]}/zcp-7.1.0-36420-ubuntu-12.04-i386-free.tar.gz" do
-#  source "http://download.zarafa.com/community/final/7.1/7.1.0-36420/zcp-7.1.0-36420-ubuntu-12.04-i386-free.tar.gz"
-#  checksum node['zarafa']['checksum']
-#  mode "0644"
-#end
-
-## TODO apt-get -f install issue: get deps from .debs and preinstall
-
-#bash "build-and-install-zarafa" do
-#  cwd Chef::Config[:file_cache_path]
-#  code <<-EOF
-#tar -xvf zcp-7.1.0-36420-ubuntu-12.04-i386-free.tar.gz
-#(cd zcp-7.1.0-36420-ubuntu-12.04-i386 && dpkg -i lib* && dpkg -i php* && dpkg -i kyoto* && dpkg -i python* && dpkg -i zarafa* && apt-get install -f)
-#EOF
-#end
-
 ##CONFIGURE APACHE SERVER##########################
 package "apache2"
 package "libapache2-mod-php5"
@@ -58,14 +38,16 @@ package "postfix"
 package "postfix-mysql" do
   only_if {node['zarafa']['backend_type'] == 'mysql'}
 end
-  # check if really needed
-  #package "postfix-pcre"
-  #package "postfix-cdb"
-
 
 package "postfix-ldap" do
   only_if {node['zarafa']['backend_type'] == 'ldap'}
 end
+
+#TODO
+# check if really needed
+#package "postfix-pcre"
+#package "postfix-cdb"
+
 
 
 service "postfix" do
