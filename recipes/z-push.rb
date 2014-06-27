@@ -19,9 +19,9 @@
 
 ##CONFIGURE Z-PUSH############################################
 
-
-#template "/usr/share/z-push/config.php" => set timezone
-
+if node['z-push']['timezone'].nil?
+  Chef::Application.fatal!("Set node['z-push']['timezone'] !")
+end
 
 minor = node['z-push']['version']
 major = minor[0,3]
@@ -47,9 +47,11 @@ directory "/var/log/z-push" do
 end
 
 template "/etc/apache2/conf.d/z-push.conf" do
+  source 'z-push/z-push.conf.erb'
   notifies :reload, "service[apache2]"
 end
 
 template "/usr/local/z-push/config.php" do
+  source 'z-push/config.php.erb'
   notifies :restart, "service[zarafa-server]"
 end

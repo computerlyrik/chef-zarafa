@@ -27,7 +27,7 @@ include_recipe 'zarafa::postfix'
 include_recipe 'zarafa::mysql'
 
 
-include_recipe 'zarafa::zarafa_server'
+include_recipe 'zarafa::zarafa-server'
 
 =begin
 

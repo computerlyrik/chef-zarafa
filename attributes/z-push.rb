@@ -20,4 +20,4 @@
 
 
 default['z-push']['version'] = '2.1.3-1892'
-default['z-push']['timezone'] = 'Europe/Berlin'
+default['z-push']['timezone'] = nil
