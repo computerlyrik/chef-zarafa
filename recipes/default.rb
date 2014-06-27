@@ -22,13 +22,8 @@ if node['zarafa']['backend_type'].nil?
 end 
 
 
-##CONFIGURE APACHE SERVER##########################
-package "apache2"
-package "libapache2-mod-php5"
-
-service "apache2" do
-  supports :reload => true
-end
+include_recipe "apache2::default"
+include_recipe "apache2::mod_php5"
 
 
 

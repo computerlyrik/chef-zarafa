@@ -11,6 +11,6 @@ version          "2.1.0"
   supports os
 end
 
-%w{ openssl database mysql openldap clamav dspam ark}.each do |dep|
+%w{ openssl database mysql ark apache2}.each do |dep|
   depends dep
 end

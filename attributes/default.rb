@@ -17,6 +17,11 @@
 # limitations under the License.
 #
 
+
+default['zarafa']['version'] = '7.1.10-44973'
+#TODO decide on arch and os type
+default['zarafa']['download_url'] = "http://download.zarafa.com/community/final/7.1/zcp-#{node['zarafa']['version']}-debian-7.0-x86_64-free.tar.gz"
+
 default['zarafa']['mysql_user'] = "zarafa"
 default['zarafa']['mysql_database'] = "zarafa"
 default['zarafa']['mysql_password'] = nil
@@ -25,7 +30,7 @@ default['zarafa']['catchall'] = nil
 
 default['zarafa']['additional_domains'] = Array.new
 
-default['zarafa']['backend_type'] = nil
+default['zarafa']['backend_type'] = 'mysql'
 default['zarafa']['ssl'] = false
 default['zarafa']['vmail_user'] = nil
 
