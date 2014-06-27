@@ -65,6 +65,7 @@ execute 'install_packages_2' do
 end
 
 
+
 ##CONFIGURE APACHE#########################################
 
 # enable ssl
@@ -79,30 +80,65 @@ if node['zarafa']['ssl']
   end
 end
 
+##CONFIGURE POSTFIX SERVER############################
+
+node.set['postfix']['main']['mydomain'] = node['domain']
+node.set['postfix']['main']['myorigin'] = node['domain']
+
+
+node.set['postfix']['main']['virtual_mailbox_domains'] = node['domain']
+node.set['postfix']['main']['virtual_transport'] = 'lmtp:127.0.0.1:2003'
+
+include_recipe 'postfix::server'
+
+package "postfix-#{node['zarafa']['backend_type']}"
+
+
+##CONFIGURE MYSQL SERVER#################################
+
+node.set['mysql']['bind_address'] = "127.0.0.1"
+
+include_recipe "mysql::server"
+include_recipe "database::mysql"
+
+mysql_connection_info = {:host => "localhost", :username => 'root', :password => node['mysql']['server_root_password']}
+
+::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
+node.set_unless['zarafa']['mysql_password'] = secure_password
+
+mysql_database_user node['zarafa']['mysql_user'] do
+  username  node['zarafa']['mysql_user']
+  password  node['zarafa']['mysql_password']
+  database_name node['zarafa']['mysql_database']
+  connection mysql_connection_info
+  action :grant
+end
+
+mysql_database node['zarafa']['mysql_database'] do
+  connection mysql_connection_info
+  action :create
+end 
+
+
+##ZARAFA SERVER############################
+
+
+service 'zarafa-server' do
+  action [:enable,:start]
+end
+
+template "/etc/zarafa/server.cfg" do
+  notifies :restart, "service[zarafa-server]"
+end
+
+template "/etc/zarafa/license/base" do
+  notifies :restart, "service[zarafa-server]"
+end
 
 =begin
-##CONFIGURE POSTFIX SERVER############################
-package "postfix"
-
-
-package "postfix-mysql" do
-  only_if {node['zarafa']['backend_type'] == 'mysql'}
-end
-
-package "postfix-ldap" do
-  only_if {node['zarafa']['backend_type'] == 'ldap'}
-end
-
-#TODO
-# check if really needed
-#package "postfix-pcre"
-#package "postfix-cdb"
 
 
 
-service "postfix" do
-  supports :restart => true
-end
 
 if node['zarafa']['backend_type'] == 'ldap'
   if Chef::Config['solo']
@@ -192,30 +228,7 @@ directory "/var/spool/postfix/var/run/saslauthd" do
 end
 
 
-##CONFIGURE MYSQL SERVER#################################
 
-node.set['mysql']['bind_address'] = "127.0.0.1"
-
-include_recipe "mysql::server"
-include_recipe "database::mysql"
-
-mysql_connection_info = {:host => "localhost", :username => 'root', :password => node['mysql']['server_root_password']}
-
-::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
-node.set_unless['zarafa']['mysql_password'] = secure_password
-
-mysql_database_user node['zarafa']['mysql_user'] do
-  username  node['zarafa']['mysql_user']
-  password  node['zarafa']['mysql_password']
-  database_name node['zarafa']['mysql_database']
-  connection mysql_connection_info
-  action :grant
-end
-
-mysql_database node['zarafa']['mysql_database'] do
-  connection mysql_connection_info
-  action :create
-end 
 
 
 
@@ -263,9 +276,7 @@ template "/etc/zarafa/ldap.cfg" do
   only_if { node['zarafa']['backend_type'] == 'ldap' }
 end
 
-template "/etc/zarafa/server.cfg" do
-  notifies :restart, "service[zarafa-server]"
-end
+
 
 template "/etc/zarafa/gateway.cfg" do
   notifies :restart, "service[zarafa-gateway]"
