@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: zarafa
-# Attributes:: default
+# Attributes:: z-push
 #
 # Copyright 2013, computerlyrik
 #
@@ -18,20 +18,5 @@
 #
 
 
-default['zarafa']['version'] = '7.1.10-44973'
-default['zarafa']['license_type'] = 'free'
 
-
-default['zarafa']['mysql_user'] = "zarafa"
-default['zarafa']['mysql_database'] = "zarafa"
-default['zarafa']['mysql_password'] = nil
-
-default['zarafa']['catchall'] = nil
-
-default['zarafa']['additional_domains'] = Array.new
-
-default['zarafa']['backend_type'] = 'mysql' #mysql or ldap
-default['zarafa']['ssl'] = true
-default['zarafa']['vmail_user'] = nil
-
-default['zarafa']['timezone'] = nil
+default['z-push']['version'] = '2.1.3-1892'
