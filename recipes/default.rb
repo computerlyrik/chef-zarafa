@@ -2,7 +2,7 @@
 # Cookbook Name:: zarafa
 # Recipe:: default
 #
-# Copyright 2012, computerlyrik
+# Copyright 2012, 2014, computerlyrik
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,11 +22,12 @@ if node['zarafa']['backend_type'].nil?
 end 
 
 
-include_recipe "apache2::default"
-include_recipe "apache2::mod_php5"
+include_recipe 'zarafa::apache2'
+include_recipe 'zarafa::postfix'
+include_recipe 'zarafa::mysql'
 
 
-##CONFIGURE ZARAFA#########################################
+## INSTALL AND CONFIGURE ZARAFA SERVER #####################################
 
 # Construct Download URL
 host = "http://download.zarafa.com/community/final"
@@ -62,67 +63,11 @@ end
 execute 'install_packages_2' do
   command 'apt-get install -fy'
   action :nothing
+  notifies :reload, 'service[apache2]', :immediately
+  notifies :restart, 'service[postfix]', :immediately
 end
 
-
-
-##CONFIGURE APACHE#########################################
-
-# enable ssl
-if node['zarafa']['ssl']
-  include_recipe 'apache2::mod_ssl'
-#  execute "a2enmod rewrite"
-  apache_site 'default-ssl' do
-    action :enable
-  end
-  apache_site 'default' do
-    action :disable
-  end
-end
-
-##CONFIGURE POSTFIX SERVER############################
-
-node.set['postfix']['main']['mydomain'] = node['domain']
-node.set['postfix']['main']['myorigin'] = node['domain']
-
-
-node.set['postfix']['main']['virtual_mailbox_domains'] = node['domain']
-node.set['postfix']['main']['virtual_transport'] = 'lmtp:127.0.0.1:2003'
-
-include_recipe 'postfix::server'
-
-package "postfix-#{node['zarafa']['backend_type']}"
-
-
-##CONFIGURE MYSQL SERVER#################################
-
-node.set['mysql']['bind_address'] = "127.0.0.1"
-
-include_recipe "mysql::server"
-include_recipe "database::mysql"
-
-mysql_connection_info = {:host => "localhost", :username => 'root', :password => node['mysql']['server_root_password']}
-
-::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
-node.set_unless['zarafa']['mysql_password'] = secure_password
-
-mysql_database_user node['zarafa']['mysql_user'] do
-  username  node['zarafa']['mysql_user']
-  password  node['zarafa']['mysql_password']
-  database_name node['zarafa']['mysql_database']
-  connection mysql_connection_info
-  action :grant
-end
-
-mysql_database node['zarafa']['mysql_database'] do
-  connection mysql_connection_info
-  action :create
-end 
-
-
-##ZARAFA SERVER############################
-
-
+# Configure
 service 'zarafa-server' do
   action [:enable,:start]
 end
@@ -134,6 +79,10 @@ end
 template "/etc/zarafa/license/base" do
   notifies :restart, "service[zarafa-server]"
 end
+
+
+
+
 
 =begin
 
@@ -171,18 +120,7 @@ if node[:zarafa][:backend_type] == 'mysql'
     notifies :restart, "service[postfix]")
   end
 
-  #catchall mysql mapping
 
-  execute "postmap -q #{node['zarafa']['catchall']} email2email.cf" do
-    action :nothing
-    cwd "/etc/postfix"
-    notifies :restart, "service[postfix]")
-  end
-
-  template "/etc/postfix/mysql-email2email.cf" do
-    notifies :run, "execute => "postmap -q #{node['zarafa']['catchall']} email2email.cf")
-    notifies :restart, "service[postfix]")
-  end
 end
 
 execute "postmap catchall" do
