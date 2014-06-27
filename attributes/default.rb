@@ -31,3 +31,6 @@ default['zarafa']['additional_domains'] = []
 default['zarafa']['backend_type'] = 'mysql' # mysql or ldap
 default['zarafa']['ssl'] = true
 default['zarafa']['vmail_user'] = nil
+
+
+default['zarafa']['certificate_databag_id'] = 'wildcard'

@@ -25,6 +25,8 @@ include_recipe 'zarafa::apache2'
 include_recipe 'zarafa::postfix'
 include_recipe 'zarafa::mysql'
 
+include_recipe 'zarafa::zarafa-gateway'
+
 include_recipe 'zarafa::zarafa-server'
 
 =begin
@@ -156,9 +158,7 @@ end
 
 
 
-template "/etc/zarafa/gateway.cfg" do
-  notifies :restart, "service[zarafa-gateway]"
-end
+
 
 directory "/var/log/zarafa/" do
   mode "755"

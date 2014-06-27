@@ -11,6 +11,6 @@ version          "2.1.0"
   supports os
 end
 
-%w{ openssl database mysql ark apache2 postfix}.each do |dep|
+%w{ openssl database mysql ark apache2 postfix certificate}.each do |dep|
   depends dep
 end
