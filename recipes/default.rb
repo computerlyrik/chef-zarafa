@@ -26,7 +26,61 @@ include_recipe "apache2::default"
 include_recipe "apache2::mod_php5"
 
 
+##CONFIGURE ZARAFA#########################################
 
+# Construct Download URL
+host = "http://download.zarafa.com/community/final"
+minor = node['zarafa']['version']
+major = minor[0,3]
+platform = node['platform']
+if platform?('debian')
+  platform_version = "#{node['platform_version'][0,2]}0"
+else
+  platform_version = node['platform_version']
+end
+arch = node['kernel']['machine']
+license = node['zarafa']['license_type']
+
+url = "#{host}/#{major}/#{minor}/zcp-#{minor}-#{platform}-#{platform_version}-#{arch}-#{license}.tar.gz"
+Chef::Log.info("Zarafa Download URL: #{url}")
+
+# Get and unpack the Zarafa packages
+ark "zarafa" do
+  url url
+  not_if { ::File.exist? "/usr/local/zarafa" }
+  notifies :run, 'execute[install_packages_1]', :immediately
+  notifies :run, 'execute[install_packages_2]', :immediately
+end
+
+execute 'install_packages_1' do
+  command 'dpkg -i *.deb'
+  ignore_failure true
+  cwd '/usr/local/zarafa'
+  action :nothing
+end
+
+execute 'install_packages_2' do
+  command 'apt-get install -fy'
+  action :nothing
+end
+
+
+##CONFIGURE APACHE#########################################
+
+# enable ssl
+if node['zarafa']['ssl']
+  include_recipe 'apache2::mod_ssl'
+#  execute "a2enmod rewrite"
+  apache_site 'default-ssl' do
+    action :enable
+  end
+  apache_site 'default' do
+    action :disable
+  end
+end
+
+
+=begin
 ##CONFIGURE POSTFIX SERVER############################
 package "postfix"
 
@@ -94,7 +148,7 @@ if node[:zarafa][:backend_type] == 'mysql'
     notifies :restart, "service[postfix]")
   end
 end
-=end
+
 execute "postmap catchall" do
   action :nothing
   cwd "/etc/postfix"
@@ -164,24 +218,7 @@ mysql_database node['zarafa']['mysql_database'] do
 end 
 
 
-##CONFIGURE ZARAFA#########################################
 
-# Get and unpack the installer
-host = "http://download.zarafa.com/community/final"
-major = "7.1"
-minor = "7.1.7-42779"
-type = "free" #opensource
-
-os = "debian"
-os_version = "7.0"
-arch = "x86_64"
-
-url = "#{host}/#{major}/#{minor}/zcp-#{minor}-#{os}-#{os_version}-#{arch}-#{type}.tar.gz"
-
-ark "zarafa" do
-  url url
-  not_if { ::File.exist? "/usr/local/zarafa" }
-end
 
 execute "/usr/local/zarafa/install.sh" do
   cwd "/usr/local/zarafa"
@@ -241,18 +278,5 @@ directory "/var/log/zarafa/" do
   only_if {node['zarafa']['vmail_user']}
 end
 
-# enable ssl, let template update trigger the reload
-if node['zarafa']['ssl']
-  execute "a2enmod ssl"
-  execute "a2enmod rewrite"
-  execute "a2dissite default"
-  execute "a2ensite default-ssl"
-else
-  execute "a2dissite default-ssl"
-  execute "a2ensite default"
-end
 
-template "/etc/apache2/httpd.conf" do
-  notifies :reload, "service[apache2]"
-end
-
+=end
