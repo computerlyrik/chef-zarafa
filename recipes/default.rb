@@ -27,62 +27,7 @@ include_recipe 'zarafa::postfix'
 include_recipe 'zarafa::mysql'
 
 
-## INSTALL AND CONFIGURE ZARAFA SERVER #####################################
-
-# Construct Download URL
-host = "http://download.zarafa.com/community/final"
-minor = node['zarafa']['version']
-major = minor[0,3]
-platform = node['platform']
-if platform?('debian')
-  platform_version = "#{node['platform_version'][0,2]}0"
-else
-  platform_version = node['platform_version']
-end
-arch = node['kernel']['machine']
-license = node['zarafa']['license_type']
-
-url = "#{host}/#{major}/#{minor}/zcp-#{minor}-#{platform}-#{platform_version}-#{arch}-#{license}.tar.gz"
-Chef::Log.info("Zarafa Download URL: #{url}")
-
-# Get and unpack the Zarafa packages
-ark "zarafa" do
-  url url
-  not_if { ::File.exist? "/usr/local/zarafa" }
-  notifies :run, 'execute[install_packages_1]', :immediately
-  notifies :run, 'execute[install_packages_2]', :immediately
-end
-
-execute 'install_packages_1' do
-  command 'dpkg -i *.deb'
-  ignore_failure true
-  cwd '/usr/local/zarafa'
-  action :nothing
-end
-
-execute 'install_packages_2' do
-  command 'apt-get install -fy'
-  action :nothing
-  notifies :reload, 'service[apache2]', :immediately
-  notifies :restart, 'service[postfix]', :immediately
-end
-
-# Configure
-service 'zarafa-server' do
-  action [:enable,:start]
-end
-
-template "/etc/zarafa/server.cfg" do
-  notifies :restart, "service[zarafa-server]"
-end
-
-template "/etc/zarafa/license/base" do
-  notifies :restart, "service[zarafa-server]"
-end
-
-
-
-
+include_recipe 'zarafa::zarafa_server'
 
 =begin
 
