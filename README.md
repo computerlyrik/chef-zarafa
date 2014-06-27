@@ -6,6 +6,10 @@ Code Repo: http://github.com/computerlyrik/chef-zarafa
 
 Motivated by freeing mobile devices:
 
+## Supports
+- complete autosetup of zarafa
+- autosetup of z-push
+
 Setup Zarafa to 
 - sync your Android/i/Windows Phone (ActiveSync)
 - have eMail push

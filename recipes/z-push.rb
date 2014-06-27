@@ -17,41 +17,41 @@
 # limitations under the License.
 #
 
-##CONFIGURE Z-PUSH############################################
+# #CONFIGURE Z-PUSH############################################
 
 if node['z-push']['timezone'].nil?
   Chef::Application.fatal!("Set node['z-push']['timezone'] !")
 end
 
 minor = node['z-push']['version']
-major = minor[0,3]
+major = minor[0, 3]
 
 url = "http://download.z-push.org/final/#{major}/z-push-#{minor}.tar.gz"
 Chef::Log.info("Z-Push Download URL: #{url}")
 
-ark "z-push" do
+ark 'z-push' do
   url url
-  not_if { ::File.exist? "/usr/local/z-push" }
+  not_if { ::File.exist? '/usr/local/z-push' }
 end
 
-directory "/var/lib/z-push" do
+directory '/var/lib/z-push' do
   mode 0755
-  owner node['apache']['user'] 
-  group node['apache']['user'] 
+  owner node['apache']['user']
+  group node['apache']['user']
 end
 
-directory "/var/log/z-push" do
+directory '/var/log/z-push' do
   mode 0755
-  owner node['apache']['user'] 
-  group node['apache']['user'] 
+  owner node['apache']['user']
+  group node['apache']['user']
 end
 
-template "/etc/apache2/conf.d/z-push.conf" do
+template '/etc/apache2/conf.d/z-push.conf' do
   source 'z-push/z-push.conf.erb'
-  notifies :reload, "service[apache2]"
+  notifies :reload, 'service[apache2]'
 end
 
-template "/usr/local/z-push/config.php" do
+template '/usr/local/z-push/config.php' do
   source 'z-push/config.php.erb'
-  notifies :restart, "service[zarafa-server]"
+  notifies :restart, 'service[zarafa-server]'
 end

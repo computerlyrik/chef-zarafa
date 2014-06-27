@@ -17,21 +17,17 @@
 # limitations under the License.
 #
 
-
 default['zarafa']['version'] = '7.1.10-44973'
 default['zarafa']['license_type'] = 'free'
 
-
-default['zarafa']['mysql_user'] = "zarafa"
-default['zarafa']['mysql_database'] = "zarafa"
+default['zarafa']['mysql_user'] = 'zarafa'
+default['zarafa']['mysql_database'] = 'zarafa'
 default['zarafa']['mysql_password'] = nil
 
 default['zarafa']['catchall'] = nil
 
-default['zarafa']['additional_domains'] = Array.new
+default['zarafa']['additional_domains'] = []
 
-default['zarafa']['backend_type'] = 'mysql' #mysql or ldap
+default['zarafa']['backend_type'] = 'mysql' # mysql or ldap
 default['zarafa']['ssl'] = true
 default['zarafa']['vmail_user'] = nil
-
-

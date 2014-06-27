@@ -17,7 +17,5 @@
 # limitations under the License.
 #
 
-
-
 default['z-push']['version'] = '2.1.3-1892'
 default['z-push']['timezone'] = nil

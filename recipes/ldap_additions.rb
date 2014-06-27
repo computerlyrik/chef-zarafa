@@ -18,39 +18,34 @@
 #
 
 # LDAP Additions - run on ldap server
-#service "slapd"
+# service "slapd"
 
-=begin
-openldap_config "cn=config" do
-  attributes ({
-    :olcArgsFile => "#{node['openldap']['run_dir']}/slapd.args",
-    :olcPidFile => "#{node['openldap']['run_dir']}/slapd.pid",
-    :olcLogLevel => node['openldap']['loglevel']
-  })
-end
-=end
+# openldap_config "cn=config" do
+#   attributes ({
+#     :olcArgsFile => "#{node['openldap']['run_dir']}/slapd.args",
+#     :olcPidFile => "#{node['openldap']['run_dir']}/slapd.pid",
+#     :olcLogLevel => node['openldap']['loglevel']
+#   })
+# end
 
-#by default activated schemas
-#cn={0}core.ldif
-#cn={1}cosine.ldif
-#cn={2}nis.ldif
-#cn={3}inetorgperson.ldif
+# by default activated schemas
+# cn={0}core.ldif
+# cn={1}cosine.ldif
+# cn={2}nis.ldif
+# cn={3}inetorgperson.ldif
 
+template '/etc/ldap/schema/zarafa.schema'
+template '/etc/ldap/zarafa.conf'
 
-
-
-template "/etc/ldap/schema/zarafa.schema"
-template "/etc/ldap/zarafa.conf"
-
-#execute "slaptest -f /etc/ldap/zarafa.conf -F #{node['openldap']['dir']}/slapd.d" do
+# execute "slaptest -f /etc/ldap/zarafa.conf -F #{node['openldap']['dir']}/slapd.d" do
 #  action :nothing
 #  subscribes :run, resources(:template => "/etc/ldap/zarafa.conf")
 #  subscribes :run, resources(:template => "/etc/ldap/schema/zarafa.schema")
 #  notifies :restart, resources(:service => "slapd")
-#end
+# end
 
-#see http://www.zarafa.com/wiki/index.php/OpenLdap:_Switch_to_dynamic_config_backend_%28cn%3Dconfig%29 how to convert from schema to this template file
-openldap_config "cn=zarafa,cn=schema,cn=config" do
-  template "schema=zarafa.ldif.erb" 
+# see http://www.zarafa.com/wiki/index.php/OpenLdap:_Switch_to_dynamic_config_backend_%28cn%3Dconfig%29 how to convert from schema to this template file
+openldap_config 'cn=zarafa,cn=schema,cn=config' do
+  template 'schema=zarafa.ldif.erb'
   action :create
 end

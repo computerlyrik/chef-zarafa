@@ -21,18 +21,13 @@ if node['zarafa']['backend_type'].nil?
   Chef::Application.fatal!("Set node['zarafa']['backend_type'] !")
 end 
 
-
 include_recipe 'zarafa::apache2'
 include_recipe 'zarafa::postfix'
 include_recipe 'zarafa::mysql'
 
-
 include_recipe 'zarafa::zarafa-server'
 
 =begin
-
-
-
 
 if node['zarafa']['backend_type'] == 'ldap'
   if Chef::Config['solo']

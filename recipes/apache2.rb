@@ -17,17 +17,15 @@
 # limitations under the License.
 #
 
-##CONFIGURE APACHE #########################################
+# #CONFIGURE APACHE #########################################
 
-
-include_recipe "apache2::default"
-include_recipe "apache2::mod_php5"
-
+include_recipe 'apache2::default'
+include_recipe 'apache2::mod_php5'
 
 # enable ssl
 if node['zarafa']['ssl']
   include_recipe 'apache2::mod_ssl'
-#  execute "a2enmod rewrite"
+  #  execute "a2enmod rewrite"
   apache_site 'default-ssl' do
     action :enable
   end

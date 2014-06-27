@@ -17,21 +17,21 @@
 # limitations under the License.
 #
 
-##CONFIGURE MYSQL SERVER #################################
+# #CONFIGURE MYSQL SERVER #################################
 
-node.set['mysql']['bind_address'] = "127.0.0.1"
+node.set['mysql']['bind_address'] = '127.0.0.1'
 
-include_recipe "mysql::server"
-include_recipe "database::mysql"
+include_recipe 'mysql::server'
+include_recipe 'database::mysql'
 
-mysql_connection_info = {:host => "localhost", :username => 'root', :password => node['mysql']['server_root_password']}
+mysql_connection_info = { host: 'localhost', username: 'root', password: node['mysql']['server_root_password'] }
 
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
 node.set_unless['zarafa']['mysql_password'] = secure_password
 
 mysql_database_user node['zarafa']['mysql_user'] do
-  username  node['zarafa']['mysql_user']
-  password  node['zarafa']['mysql_password']
+  username node['zarafa']['mysql_user']
+  password node['zarafa']['mysql_password']
   database_name node['zarafa']['mysql_database']
   connection mysql_connection_info
   action :grant
@@ -40,4 +40,4 @@ end
 mysql_database node['zarafa']['mysql_database'] do
   connection mysql_connection_info
   action :create
-end 
+end
