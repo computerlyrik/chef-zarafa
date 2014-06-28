@@ -17,25 +17,15 @@
 # limitations under the License.
 #
 
-catchall_file = '/etc/postfix/catchall'
-template catchall_file do
-  source 'postfix/catchall.erb'
-  notifies :run, 'execute[postmap-catchall]', :immediately
-end
-execute 'postmap-catchall' do
-  command "postmap hash:#{catchall_file}"
-  action :nothing
-  notifies :restart, 'service[postfix]'
-end
 
 case node['zarafa']['backend_type']
 when 'mysql'
-  template '/etc/postfix/mysql-aliases.cf' do
-    source 'postfix/mysql-aliases.cf.erb'
+  virtual_mailbox_maps = 'mysql:/etc/postfix/mysql-users.cf'
+  template '/etc/postfix/mysql-users.cf' do
+    source 'postfix/mysql-users.cf.erb'
     notifies :restart, 'service[postfix]'
   end
-  virtual_alias_maps = "hash:#{catchall_file}"
-  virtual_mailbox_maps = 'mysql:/etc/postfix/mysql-aliases.cf'
+  virtual_alias_maps = nil
 when 'ldap'
   if Chef::Config['solo']
     Chef::Log.warn('This recipe uses search. Chef Solo does not support search. Ldap search will not be executed')
@@ -44,22 +34,23 @@ when 'ldap'
     ldap_server = search(:node, "recipes:openldap\\:\\:users && domain:#{node['domain']}").first
   end
 
-  template '/etc/postfix/ldap-aliases.cf' do
-    variables ({ ldap_server: ldap_server })
-    notifies :restart, 'service[postfix]', :delayed
-  end
-
+  virtual_mailbox_maps = 'ldap:/etc/postfix/ldap-users.cf'
   template '/etc/postfix/ldap-users.cf' do
+    source 'postfix/ldap-users.cf.erb'
     variables ({ ldap_server: ldap_server })
     notifies :restart, 'service[postfix]', :delayed
   end
 
   virtual_alias_maps = 'ldap:/etc/postfix/ldap-aliases.cf'
-  unless node['zarafa']['catchall'].nil?
-    virtual_alias_maps << ', hash:/etc/postfix/catchall'
+  template '/etc/postfix/ldap-aliases.cf' do
+    source 'postfix/ldap-aliases.cf.erb'
+    variables ({ ldap_server: ldap_server })
+    notifies :restart, 'service[postfix]', :delayed
   end
-  virtual_mailbox_maps = 'ldap:/etc/postfix/ldap-users.cf'
+
 end
+
 
 node.set['postfix']['main']['virtual_mailbox_maps'] = virtual_mailbox_maps
 node.set['postfix']['main']['virtual_alias_maps'] = virtual_alias_maps
+node.save
