@@ -23,28 +23,23 @@ node.set['postfix']['main']['smtpd_recipient_restrictions'] = 'permit_mynetworks
 
 package 'sasl2-bin'
 
-group "sasl" do
+group 'sasl' do
   action :modify
-  members "postfix"
+  members 'postfix'
   append true
 end
 
-
-service "saslauthd" do
+service 'saslauthd' do
   action [:enable, :start]
 end
 
-template "/etc/postfix/sasl/smtpd.conf" do
+template '/etc/postfix/sasl/smtpd.conf' do
   source 'postfix/sasl/smtpd.conf.erb'
-  notifies :restart, "service[postfix]"
+  notifies :restart, 'service[postfix]'
 end
 
-template "/etc/default/saslauthd" do
+template '/etc/default/saslauthd' do
   source 'postfix/sasl/saslauthd.erb'
-  notifies :restart, "service[saslauthd]", :immediately
-  notifies :restart, "service[postfix]"
+  notifies :restart, 'service[saslauthd]', :immediately
+  notifies :restart, 'service[postfix]'
 end
-
-
-
-

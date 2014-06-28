@@ -25,16 +25,15 @@ certificate_manage 'zarafa-gateway' do
   not_if { node['zarafa']['certificate_databag_id'].nil? }
 end
 
-template "/etc/zarafa/gateway.cfg" do
+template '/etc/zarafa/gateway.cfg' do
   source 'zarafa-gateway/gateway.cfg.erb'
   variables(
       ssl_certificate: "#{certificate_path}/certs/#{node['fqdn']}.pem",
       ssl_key: "#{certificate_path}/private/#{node['fqdn']}.key"
   )
-  notifies :restart, "service[zarafa-gateway]"
+  notifies :restart, 'service[zarafa-gateway]'
 end
 
-service "zarafa-gateway" do
+service 'zarafa-gateway' do
   action [:enable, :start]
 end
-

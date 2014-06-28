@@ -29,7 +29,7 @@ include_recipe 'zarafa::zarafa-gateway'
 
 include_recipe 'zarafa::zarafa-server'
 
-=begin
+= begin
 
 
 #for zarafa webapp

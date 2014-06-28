@@ -25,14 +25,14 @@ end
 execute 'postmap-catchall' do
   command "postmap hash:#{catchall_file}"
   action :nothing
-  notifies :restart, "service[postfix]"
+  notifies :restart, 'service[postfix]'
 end
 
 case node[:zarafa][:backend_type]
 when 'mysql'
   template '/etc/postfix/mysql-aliases.cf' do
     source 'postfix/mysql-aliases.cf.erb'
-    notifies :restart, "service[postfix]"
+    notifies :restart, 'service[postfix]'
   end
   virtual_alias_maps = "hash:#{catchall_file}"
   virtual_mailbox_maps = 'mysql:/etc/postfix/mysql-aliases.cf'
@@ -60,8 +60,6 @@ when 'ldap'
   end
   virtual_mailbox_maps = 'ldap:/etc/postfix/ldap-users.cf'
 end
-
-
 
 node.set['postfix']['main']['virtual_mailbox_maps'] = virtual_mailbox_maps
 node.set['postfix']['main']['virtual_alias_maps'] = virtual_alias_maps
