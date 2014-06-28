@@ -33,14 +33,11 @@ end
 node.set['postfix']['main']['mydestination'] = destinations
 node.set['postfix']['main']['message_size_limit'] = 31_457_280 # 30M
 
-
-
 include_recipe 'postfix::server'
 
 include_recipe 'zarafa::postfix_virtual_users'
 include_recipe 'zarafa::postfix_catchall'
 
 include_recipe 'zarafa::postfix_smtpd_sasl'
-
 
 package "postfix-#{node['zarafa']['backend_type']}"

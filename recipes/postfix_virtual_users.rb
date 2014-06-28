@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-
 case node['zarafa']['backend_type']
 when 'mysql'
   virtual_mailbox_maps = 'mysql:/etc/postfix/mysql-users.cf'
@@ -50,7 +49,5 @@ when 'ldap'
 
 end
 
-
 node.set['postfix']['main']['virtual_mailbox_maps'] = virtual_mailbox_maps
 node.set['postfix']['main']['virtual_alias_maps'] = virtual_alias_maps
-

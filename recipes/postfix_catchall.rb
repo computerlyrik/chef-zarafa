@@ -33,4 +33,3 @@ if node.set['postfix']['main']['virtual_alias_maps'].nil?
 else
   node.set['postfix']['main']['virtual_alias_maps'] << ", hash:#{catchall_file}"
 end
-
