@@ -3,8 +3,8 @@
 # Description
 
 ## Source code
-Here is the Source code repository,
-**please fork and contribute**
+Here is the Source code repository,  
+**please fork and contribute**  
 http://github.com/computerlyrik/chef-zarafa
 
 ## Motivation
@@ -24,14 +24,6 @@ Working with mobile devices and want your 'own Server' for you or your business?
 - Receive and send eMail via imap
 - Have two rich Webinterfaces to login wherever, whenever you want
 
-## what to do
-
-sudo /usr/bin/zarafa-admin -c test -p password -e test@example.com -f "Zarafa Test"
-
-
-
-
-
 # Requirements
 
 ## Operating System and Hardware Reqirements
@@ -39,21 +31,33 @@ See the Zarafa documentation for Hardware req
 The recipes itself currently support Debian 7.5
 
 ## Cookbooks
-- **database** and **mysql**
+- **database** and **mysql**  
   for setting up the mysql DB
-- **apache2**
+- **apache2**  
   our favourite webserver
-- **postfix**
+- **postfix**  
   our favourite mailserver
-- **certificate**
-  Managing your certificate for https/TLS via a databag
+- **certificate**  
+  Managing your certificate for https/TLS via a databag.  
+  http://community.opscode.com/cookbooks/certificate
 - **openssl**
 - **ark**
 
 # Attributes
-Set up a catchall user with
+Some pre-settings have been made. Please see attributes ruby files for reference.
+
+## required
+Example
 ```ruby
-node['zarafa']['catchall'] = "mail@mydomain.com"
+
+default['zarafa']['catchall_user'] = "mydeliverymail@mydomain.com"
+default['zarafa']['certificate_databag_id'] = 'mySecureDataBag'
+```
+
+## optional
+Example, expecting to run on `myhostname.example.com`
+```ruby
+default['zarafa']['additional_domains'] = ['example.net', 'example.org']
 ```
 
 # Cookbooks
@@ -70,7 +74,7 @@ Calls the other sub-recipies
 ### zarafa::postfix_virtual_users
 Configure postfix to read Mailboxses from MySQL and deliver them via lmtp[1[1].  
 By default [2] server installation is configured to only deliver to unix system users.  
-[1] http://doc.zarafa.com/7.1/Administrator_Manual/en-US/html/_MTAIntegration.html#_configure_zcp_postfix_integration_with_the_db_plugin
+[1] http://doc.zarafa.com/7.1/Administrator_Manual/en-US/html/_MTAIntegration.html#_configure_zcp_postfix_integration_with_the_db_plugin  
 [2] http://www.zarafa.com/wiki/index.php/Installing_Zarafa_from_packages
 ### zarafa::postfix_catchall
 Sets up an alias-DB for postfix to have the configured CatchAll user for the all domains we configured
@@ -97,6 +101,10 @@ Install and activate ActiveSync on Zarafa Server
 # Usage
 - set all attributes mentioned above
 - run ```zarafa::default```
+- login to server and do
+```bash
+sudo /usr/bin/zarafa-admin -c test -p password -e test@example.com -f "Zarafa Test"
+```
 
 # Contact
 see metadata.rb
