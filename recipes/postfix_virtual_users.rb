@@ -28,7 +28,7 @@ execute 'postmap-catchall' do
   notifies :restart, 'service[postfix]'
 end
 
-case node[:zarafa][:backend_type]
+case node['zarafa']['backend_type']
 when 'mysql'
   template '/etc/postfix/mysql-aliases.cf' do
     source 'postfix/mysql-aliases.cf.erb'
