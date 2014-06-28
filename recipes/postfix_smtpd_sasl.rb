@@ -21,7 +21,7 @@ node.set['postfix']['main']['smtp_sasl_auth_enable'] = 'yes'
 node.set['postfix']['main']['smtpd_sasl_auth_enable'] = 'yes'
 node.set['postfix']['main']['smtpd_recipient_restrictions'] = 'permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination'
 
-package 'sasl2-bin'
+package 'sasl2-bin' 
 
 group 'sasl' do
   action :modify

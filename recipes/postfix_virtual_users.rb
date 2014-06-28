@@ -53,4 +53,4 @@ end
 
 node.set['postfix']['main']['virtual_mailbox_maps'] = virtual_mailbox_maps
 node.set['postfix']['main']['virtual_alias_maps'] = virtual_alias_maps
-node.save
+

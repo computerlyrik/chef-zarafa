@@ -25,9 +25,8 @@ include_recipe 'zarafa::apache2'
 include_recipe 'zarafa::postfix'
 include_recipe 'zarafa::mysql'
 
-include_recipe 'zarafa::zarafa-gateway'
-
 include_recipe 'zarafa::zarafa-server'
+include_recipe 'zarafa::zarafa-gateway'
 
 =begin
 
