@@ -16,28 +16,14 @@ platforms:
   - recipe[apt]
 - name: debian-7
   driver_config:
-    box: opscode-debian-7.1
-    box_url: http://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_debian-7.1.0_provisionerless.box
+    box: opscode-debian-7.4
+    box_url: http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_debian-7.4_chef-provisionerless.box
   run_list:
   - recipe[apt]
 
 suites:
-- name: ldap
-  run_list:
-    - recipe[openldap::server]
-    - recipe[openldap::users]
-    - recipe[zarafa::ldap_additions]
-#    - recipe[minitest-handler]
-  attributes:
-    zarafa:
-      backend_type: ldap
-      mysql_password: test
-    openldap:
-      rootpw: secretsauce
-      roothash: "{SSHA}6BjlvtSbVCL88li8IorkqMSofkLio58/"
-      preseed_dir: "/tmp/does_not_exist"
 
-- name: ldap_complete
+- name: ldap
   run_list:
     - recipe[openldap::server]
     - recipe[openldap::users]
@@ -62,11 +48,15 @@ suites:
 - name: mysql
   run_list:
     - recipe[zarafa]
+    - recipe[zarafa::z-push]
 #    - recipe[minitest-handler]
   attributes:
     zarafa:
       backend_type: mysql
       mysql_password: test
+      catchall_user: me@example.com
+    z-push:
+      timezone: Europe/Berlin
     mysql:
       server_debian_password: test
       server_backup_password: test
