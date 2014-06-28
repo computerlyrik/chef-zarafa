@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: zarafa
-# Recipe:: ldap
+# Recipe:: ldap-additions
 #
 # Copyright 2012, computerlyrik
 #

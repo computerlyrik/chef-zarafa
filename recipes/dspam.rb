@@ -16,6 +16,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+=begin
+
 include_recipe 'dspam'
 
 node.set['clamav']['clamd']['tcp_socket'] = 3310
@@ -42,3 +45,5 @@ template '/etc/dspam/dspam.conf' do
   notifies :restart, 'service[dspam]'
   notifies :restart, 'service[postfix]'
 end
+
+=end
