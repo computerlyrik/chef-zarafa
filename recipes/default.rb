@@ -31,74 +31,6 @@ include_recipe 'zarafa::zarafa-server'
 
 =begin
 
-if node['zarafa']['backend_type'] == 'ldap'
-  if Chef::Config['solo']
-    Chef::Log.warn("This recipe uses search. Chef Solo does not support search. Ldap search will not be executed")
-    ldap_server = node
-  else
-    ldap_server = search(:node, "recipes:openldap\\:\\:users && domain:#{node['domain']}").first
-  end
-
-  template "/etc/postfix/ldap-aliases.cf" do
-    variables ({:ldap_server => ldap_server})
-    notifies :restart, "service[postfix]"
-  end
-
-  template "/etc/postfix/ldap-users.cf" do
-    variables ({:ldap_server => ldap_server})
-    notifies :restart, "service[postfix]"
-  end
-end
-=begin
-if node[:zarafa][:backend_type] == 'mysql'
-  execute "postmap -q #{node['zarafa']['catchall']} mysql-aliases.cf" do
-    action :nothing
-    cwd "/etc/postfix"
-    notifies :restart, "service[postfix]")
-  end
-
-  template "/etc/postfix/mysql-aliases.cf" do
-    notifies :run, "execute => "postmap -q #{node['zarafa']['catchall']} mysql-aliases.cf")
-    notifies :restart, "service[postfix]")
-  end
-
-
-end
-
-execute "postmap catchall" do
-  action :nothing
-  cwd "/etc/postfix"
-  notifies :restart, "service[postfix]"
-end
-
-template "/etc/postfix/catchall" do
-  notifies :run, "execute[postmap catchall]"
-  not_if { node['zarafa']['catchall'].nil? }
-end
-
-template "/etc/postfix/main.cf" do
-  notifies :restart, "service[postfix]"
-end
-
-## Setup Config for smtp auth
-package "sasl2-bin"
-
-#TODO debug why is not
-
-
-template "/etc/postfix/master.cf" do
-  notifies :restart, "service[postfix]"
-  only_if { node['zarafa']['vmail_user'] }
-end
-
-#set permissions for postfix
-
-
-
-
-
-
-
 
 #for zarafa webapp
 directory "/var/lib/zarafa-webapp/tmp" do
@@ -106,12 +38,6 @@ directory "/var/lib/zarafa-webapp/tmp" do
   group "www-data"
   mode 0755
 end
-
-
- 
-
-
-
 
 
 directory "/var/log/zarafa/" do
