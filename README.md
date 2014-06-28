@@ -69,32 +69,34 @@ Set up and configure Apache2 Webserver
 
 ## zarafa::postfix
 Make some basic configuration for the postfix Server.  
-Calls the other sub-recipies
+Calls sub-recipies.
 
 ### zarafa::postfix_virtual_users
 Configure postfix to read Mailboxses from MySQL and deliver them via lmtp[1[1].  
 By default [2] server installation is configured to only deliver to unix system users.  
 [1] http://doc.zarafa.com/7.1/Administrator_Manual/en-US/html/_MTAIntegration.html#_configure_zcp_postfix_integration_with_the_db_plugin  
 [2] http://www.zarafa.com/wiki/index.php/Installing_Zarafa_from_packages
+
 ### zarafa::postfix_catchall
 Sets up an alias-DB for postfix to have the configured CatchAll user for the all domains we configured
 
 ### zarafa::postfix_stmpd_sasl
 By default, the postfix server takes all eMail via port 25. If the Server is directly connected to the internet you want to secure this connection only for logged-in users.  
-This recipe configures sasl to authenticate via the rimap protocol.
+This recipe configures sasl to authenticate via the rimap protocol.  
 http://www.zarafa.com/wiki/index.php/SMTP-Auth_for_IMAP_users
 
 ## zarafa::mysql
 Set up the Database for zarafa
 
 ## zarafa::zarafa-server
-Installs the zarafa server exactly as described here: http://www.zarafa.com/wiki/index.php/Installing_Zarafa_from_packages
+Installs the zarafa server exactly as described here:  
+http://www.zarafa.com/wiki/index.php/Installing_Zarafa_from_packages
 
 ## zarafa::zarafa-gateway
 Enables TLS on zarafa-gateway. This is used for port 145 (imap) TLS connections.
 
 ## zarafa::z-push
-Install and activate ActiveSync on Zarafa Server
+Install and activate ActiveSync on Zarafa Server  
 **For more see http://www.zarafa.com/content/mobility**
 
 
