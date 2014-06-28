@@ -24,13 +24,18 @@ default['zarafa']['mysql_user'] = 'zarafa'
 default['zarafa']['mysql_database'] = 'zarafa'
 default['zarafa']['mysql_password'] = nil
 
-default['zarafa']['catchall'] = nil
-
-default['zarafa']['additional_domains'] = []
+default['zarafa']['catchall_user'] = nil
+default['zarafa']['additional_domains'] = [ ]
 
 default['zarafa']['backend_type'] = 'mysql' # mysql or ldap
 default['zarafa']['ssl'] = true
 default['zarafa']['vmail_user'] = nil
 
 
-default['zarafa']['certificate_databag_id'] = 'wildcard'
+default['zarafa']['certificate_databag_id'] = nil
+
+
+override['postfix']['main']['transport_maps'] = ''
+override['postfix']['main']['smtp_tls_CAfile'] = ''
+override['postfix']['main']['smtpd_tls_CAfile'] = ''
+override['postfix']['main']['smtp_sasl_password_maps'] = ''

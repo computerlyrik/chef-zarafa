@@ -84,18 +84,7 @@ end
 package "sasl2-bin"
 
 #TODO debug why is not
-service "saslauthd" do
-  action [:enable, :start]
-end
 
-template "/etc/postfix/sasl/smtpd.conf" do
-  notifies :restart, "service[postfix]"
-end
-
-template "/etc/default/saslauthd" do
-  notifies :restart, "service[saslauthd]", :immediately
-  notifies :restart, "service[postfix]"
-end
 
 template "/etc/postfix/master.cf" do
   notifies :restart, "service[postfix]"
@@ -103,9 +92,6 @@ template "/etc/postfix/master.cf" do
 end
 
 #set permissions for postfix
-directory "/var/spool/postfix/var/run/saslauthd" do
-  owner "postfix"
-end
 
 
 
@@ -113,18 +99,6 @@ end
 
 
 
-execute "/usr/local/zarafa/install.sh" do
-  cwd "/usr/local/zarafa"
-  ignore_failure true
-  action :nothing
-  subscribes :run, "ark[zarafa]", :immediately
-end
-
-execute "apt-get install -f -y" do
-  action :nothing
-  subscribes :run, "ark[zarafa]", :immediately
-end
-#TODO: FAIL and run install.sh
 
 #for zarafa webapp
 directory "/var/lib/zarafa-webapp/tmp" do
@@ -134,27 +108,7 @@ directory "/var/lib/zarafa-webapp/tmp" do
 end
 
 
-
-#not necessary - got by program itself package "php-gettext"
-#internally: zarafa-admin -s
-
-#zarafa-admin -c user
-
-service "zarafa-server" do 
-  supports :restart => true, :start => true
-  action :start
-end
-
-service "zarafa-gateway" do 
-  supports :restart => true, :start => true
-  action :start
-end
  
-template "/etc/zarafa/ldap.cfg" do
-  variables ({:ldap_server => ldap_server})
-  notifies :restart, "service[zarafa-server]"
-  only_if { node['zarafa']['backend_type'] == 'ldap' }
-end
 
 
 

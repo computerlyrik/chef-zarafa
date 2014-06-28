@@ -6,6 +6,10 @@ Code Repo: http://github.com/computerlyrik/chef-zarafa
 
 Motivated by freeing mobile devices:
 
+## what to do
+
+sudo /usr/bin/zarafa-admin -c test -p password -e test@example.com -f "Zarafa Test"
+
 ## Supports
 - complete autosetup of zarafa
 - autosetup of z-push
@@ -43,3 +47,8 @@ see metadata.rb
 - test mysql installation
 - test auto-installation by packages
 - separate simple users via virtual and email2email config
+
+Sources 
+http://www.zarafa.com/wiki/index.php/Installing_Zarafa_from_packages
+http://doc.zarafa.com/7.1/Administrator_Manual/en-US/html/_MTAIntegration.html#_configure_zcp_postfix_integration_with_the_db_plugin
+http://www.zarafa.com/wiki/index.php/SMTP-Auth_for_IMAP_users
