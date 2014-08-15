@@ -20,6 +20,7 @@
 default['zarafa']['version'] = '7.1.10-44973'
 default['zarafa']['license_type'] = 'free'
 
+default['zarafa']['backend_type'] = 'mysql' # mysql or ldap
 default['zarafa']['mysql_user'] = 'zarafa'
 default['zarafa']['mysql_database'] = 'zarafa'
 default['zarafa']['mysql_password'] = nil
@@ -27,11 +28,20 @@ default['zarafa']['mysql_password'] = nil
 default['zarafa']['catchall_user'] = nil
 default['zarafa']['additional_domains'] = []
 
-default['zarafa']['backend_type'] = 'mysql' # mysql or ldap
+# Configure if SSL is enabled. Will be enabled for:
+# - IMAP
+# - SMTP
+# - Webapp
+# - Webaccess
 default['zarafa']['ssl'] = true
+# Load Certificate from
+default['zarafa']['certificate_databag_id'] = nil
+# Store Certificate to path for use on this Instance
+default['zarafa']['certificate_path']  = '/etc/zarafa/ssl'
+
+
 default['zarafa']['vmail_user'] = nil
 
-default['zarafa']['certificate_databag_id'] = nil
 
 override['postfix']['main']['transport_maps'] = ''
 override['postfix']['main']['smtp_tls_CAfile'] = ''

@@ -17,20 +17,9 @@
 # limitations under the License.
 #
 
-certificate_path = '/etc/zarafa/ssl'
-
-certificate_manage 'zarafa-gateway' do
-  search_id node['zarafa']['certificate_databag_id']
-  cert_path certificate_path
-  not_if { node['zarafa']['certificate_databag_id'].nil? }
-end
 
 template '/etc/zarafa/gateway.cfg' do
   source 'zarafa-gateway/gateway.cfg.erb'
-  variables(
-      ssl_certificate: "#{certificate_path}/certs/#{node['fqdn']}.pem",
-      ssl_key: "#{certificate_path}/private/#{node['fqdn']}.key"
-  )
   notifies :restart, 'service[zarafa-gateway]'
 end
 

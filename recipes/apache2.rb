@@ -24,12 +24,22 @@ include_recipe 'apache2::mod_php5'
 
 # enable ssl
 if node['zarafa']['ssl']
+
   include_recipe 'apache2::mod_ssl'
+
+  template '/etc/apache2/sites-available/ssl' do
+    source 'apache2/ssl.site.erb'
+  end
+
   #  execute "a2enmod rewrite"
-  apache_site 'default-ssl' do
+
+  apache_site 'ssl' do
     action :enable
   end
+
   apache_site 'default' do
     action :disable
   end
+
 end
+

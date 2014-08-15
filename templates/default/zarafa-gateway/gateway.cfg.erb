@@ -69,13 +69,10 @@ imap_store_rfc822 = yes
 imap_max_fail_commands = 10
 
 # Disable all plaintext authentications unless SSL/TLS is used
-disable_plaintext_auth = yes
+disable_plaintext_auth = <%= node['zarafa']['ssl'] ? 'yes' : 'no' %>
 
-# File with RSA key for SSL
-ssl_private_key_file	=	<%= @ssl_key %>
-
-#File with certificate for SSL
-ssl_certificate_file	=	<%= @ssl_certificate %>
+ssl_private_key_file	=	<%= node['zarafa']['ssl'] ? "#{node['zarafa']['certificate_path']}/certs/#{node['fqdn']}.pem" : "" %>
+ssl_certificate_file	=	<%= node['zarafa']['ssl'] ? "#{node['zarafa']['certificate_path']}/private/#{node['fqdn']}.key" : '' %>
 
 # Verify client certificate
 ssl_verify_client	=	no
