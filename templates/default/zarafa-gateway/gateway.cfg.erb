@@ -71,8 +71,8 @@ imap_max_fail_commands = 10
 # Disable all plaintext authentications unless SSL/TLS is used
 disable_plaintext_auth = <%= node['zarafa']['ssl'] ? 'yes' : 'no' %>
 
-ssl_private_key_file	=	<%= node['zarafa']['ssl'] ? "#{node['zarafa']['certificate_path']}/certs/#{node['fqdn']}.pem" : "" %>
-ssl_certificate_file	=	<%= node['zarafa']['ssl'] ? "#{node['zarafa']['certificate_path']}/private/#{node['fqdn']}.key" : '' %>
+ssl_certificate_file	=	<%= node['zarafa']['ssl'] ? "#{node['zarafa']['certificate_path']}/certs/#{node['fqdn']}.pem" : "" %>
+ssl_private_key_file	=	<%= node['zarafa']['ssl'] ? "#{node['zarafa']['certificate_path']}/private/#{node['fqdn']}.key" : '' %>
 
 # Verify client certificate
 ssl_verify_client	=	no
