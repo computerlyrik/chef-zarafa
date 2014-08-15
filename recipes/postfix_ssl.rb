@@ -1,8 +1,8 @@
 #
 # Cookbook Name:: zarafa
-# Recipe:: ssl
+# Recipe:: postfix_ssl
 #
-# Copyright 2012, 2014, computerlyrik
+# Copyright 2014, computerlyrik
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,11 +17,8 @@
 # limitations under the License.
 #
 
-certificate_manage 'zarafa-gateway' do
-  search_id node['zarafa']['certificate_databag_id']
-  cert_path node['zarafa']['ssl_path']
-  not_if { node['zarafa']['certificate_databag_id'].nil? }
-end
 
-node.set['zarafa']['certificate_path'] = "#{node['zarafa']['ssl_path']}/certs/#{node['fqdn']}.pem"
-node.set['zarafa']['certificate_key_path'] = "#{node['zarafa']['ssl_path']}/private/#{node['fqdn']}.key"
+node.set['postfix']['main']['smtpd_tls_cert_file'] = node['zarafa']['certificate_path']
+node.set['postfix']['main']['smtpd_tls_key_file'] =  node['zarafa']['certificate_key_path']
+node.set['postfix']['main']['smtpd_use_tls'] = 'yes'
+node.set['postfix']['main']['smtpd_enforce_tls'] = 'yes'

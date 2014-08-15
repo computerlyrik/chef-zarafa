@@ -34,9 +34,9 @@
         #   Enable/Disable SSL for this virtual host.
         SSLEngine on
 
-        SSLCertificateFile    <%= "#{node['zarafa']['certificate_path']}/certs/#{node['fqdn']}.pem" %>
+        SSLCertificateFile    <%= node['zarafa']['certificate_path'] %>
 
-        SSLCertificateKeyFile <%= "#{node['zarafa']['certificate_path']}/private/#{node['fqdn']}.key" %>
+        SSLCertificateKeyFile <%= node['zarafa']['certificate_key_path'] %>
 
 
 

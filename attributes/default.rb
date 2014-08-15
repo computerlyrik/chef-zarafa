@@ -37,8 +37,7 @@ default['zarafa']['ssl'] = true
 # Load Certificate from
 default['zarafa']['certificate_databag_id'] = nil
 # Store Certificate to path for use on this Instance
-default['zarafa']['certificate_path']  = '/etc/zarafa/ssl'
-
+default['zarafa']['ssl_path']  = '/etc/zarafa/ssl'
 
 default['zarafa']['vmail_user'] = nil
 
