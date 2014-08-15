@@ -1,0 +1,68 @@
+<IfModule mod_ssl.c>
+<VirtualHost _default_:443>
+        ServerAdmin webmaster@localhost
+
+        DocumentRoot /var/www
+        <Directory />
+                Options FollowSymLinks
+                AllowOverride None
+        </Directory>
+        <Directory /var/www/>
+                Options Indexes FollowSymLinks MultiViews
+                AllowOverride None
+                Order allow,deny
+                allow from all
+        </Directory>
+
+        ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+        <Directory "/usr/lib/cgi-bin">
+                AllowOverride None
+                Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+                Order allow,deny
+                Allow from all
+        </Directory>
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+
+        CustomLog ${APACHE_LOG_DIR}/ssl_access.log combined
+
+        #   SSL Engine Switch:
+        #   Enable/Disable SSL for this virtual host.
+        SSLEngine on
+
+        SSLCertificateFile    <%= "#{node['zarafa']['certificate_path']}/certs/#{node['fqdn']}.pem" %>
+
+        SSLCertificateKeyFile <%= "#{node['zarafa']['certificate_path']}/private/#{node['fqdn']}.key" %>
+
+
+
+
+        #SSLOptions +FakeBasicAuth +ExportCertData +StrictRequire
+        <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                SSLOptions +StdEnvVars
+        </FilesMatch>
+        <Directory /usr/lib/cgi-bin>
+                SSLOptions +StdEnvVars
+        </Directory>
+
+
+
+        #   SSL Protocol Adjustments:
+        #   The safe and default but still SSL/TLS standard compliant shutdown
+        #   approach is that mod_ssl sends the close notify alert but doesn't wait for
+        #   the close notify alert from client. When you need a different shutdown
+        #   approach you can use one of the following variables:
+        #   o ssl-unclean-shutdown:
+        #     This forces an unclean shutdown when the connection is closed, i.e. no
+        BrowserMatch "MSIE [2-6]" \
+                nokeepalive ssl-unclean-shutdown \
+                downgrade-1.0 force-response-1.0
+        # MSIE 7 and newer should be able to use keepalive
+        BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
+
+</VirtualHost>
+</IfModule>
