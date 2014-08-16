@@ -42,6 +42,7 @@ default['zarafa']['ssl_path']  = '/etc/zarafa/ssl'
 default['zarafa']['vmail_user'] = nil
 
 
+override['postfix']['main']['access_maps'] = ''
 override['postfix']['main']['transport_maps'] = ''
 override['postfix']['main']['smtp_tls_CAfile'] = ''
 override['postfix']['main']['smtpd_tls_CAfile'] = ''
