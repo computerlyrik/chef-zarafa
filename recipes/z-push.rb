@@ -46,8 +46,12 @@ directory '/var/log/z-push' do
   group node['apache']['user']
 end
 
-template '/etc/apache2/conf.d/z-push.conf' do
+template '/etc/apache2/conf-available/z-push.conf' do
   source 'z-push/z-push.conf.erb'
+  notifies :reload, 'service[apache2]'
+end
+
+apache_site 'z-push' do
   notifies :reload, 'service[apache2]'
 end
 
