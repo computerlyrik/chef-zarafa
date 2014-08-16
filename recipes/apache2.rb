@@ -42,4 +42,3 @@ if node['zarafa']['ssl']
   end
 
 end
-

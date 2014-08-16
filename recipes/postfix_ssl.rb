@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-
 node.set['postfix']['main']['smtpd_tls_cert_file'] = node['zarafa']['certificate_path']
 node.set['postfix']['main']['smtpd_tls_key_file'] =  node['zarafa']['certificate_key_path']
 node.set['postfix']['main']['smtpd_use_tls'] = 'yes'

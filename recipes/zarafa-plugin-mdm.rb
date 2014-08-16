@@ -1,4 +1,4 @@
-## Mobile Device Manager
+# Mobile Device Manager
 package 'php-soap'
 
 # remote_file "#{Chef::Config[:file_cache_path]}/download.php?release_guid=9498" do

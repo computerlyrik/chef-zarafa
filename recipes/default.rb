@@ -19,11 +19,11 @@
 
 if node['zarafa']['backend_type'].nil?
   Chef::Application.fatal!("Set node['zarafa']['backend_type'] !")
-end 
+end
 
 if node['zarafa']['ssl']
   include_recipe 'zarafa::ssl'
-end 
+end
 
 include_recipe 'zarafa::apache2'
 
@@ -33,9 +33,7 @@ include_recipe 'zarafa::mysql'
 include_recipe 'zarafa::zarafa-server'
 include_recipe 'zarafa::zarafa-gateway'
 
-
-=begin
-
+=begin 
 
 #for zarafa webapp
 directory "/var/lib/zarafa-webapp/tmp" do

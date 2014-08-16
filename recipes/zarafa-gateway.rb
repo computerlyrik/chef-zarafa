@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-
 template '/etc/zarafa/gateway.cfg' do
   source 'zarafa-gateway/gateway.cfg.erb'
   notifies :restart, 'service[zarafa-gateway]'

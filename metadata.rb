@@ -6,11 +6,10 @@ description      "Installs/Configures zarafa"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          "2.9.2"
 
-
-%w{ ubuntu debian }.each do |os|
+%w(ubuntu debian).each do |os|
   supports os
 end
 
-%w{ openssl database mysql ark apache2 postfix certificate}.each do |dep|
+%w(openssl database mysql ark apache2 postfix certificate).each do |dep|
   depends dep
 end
