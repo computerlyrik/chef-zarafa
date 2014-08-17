@@ -29,6 +29,18 @@ group 'sasl' do
   append true
 end
 
+posfix_sasl = '/var/spool/postfix/var/run/saslauthd'
+directory 'postfix_sasl' do
+  path 'postfix_sasl'
+  user 'root'
+  group 'sasl'
+  mode  "710"
+end
+
+link "/var/run/saslauthd" do
+  to "#{postfix_sasl}"
+end
+
 service 'saslauthd' do
   action [:enable, :start]
 end
