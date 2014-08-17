@@ -40,7 +40,7 @@ filepath = "#{node['zarafa']['backup_dir']}/attachments.tar"
 
 zip_attachments = 'tar -cf '
 zip_attachments += "#{filepath} "
-zip_attachments += '/var/lib/zarafa/attachments'
+zip_attachments += '/var/lib/zarafa/attachments/*'
 
 execute 'zip_attachments' do
   command zip_attachments

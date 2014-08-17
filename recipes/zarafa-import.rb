@@ -42,7 +42,7 @@ filepath = "#{node['zarafa']['backup_dir']}/attachments.tar"
 
 unzip_attachments = 'tar -xf '
 unzip_attachments += "#{filepath} "
-unzip_attachments += '-C /var/lib/zarafa/attachments'
+unzip_attachments += '-C /var/lib/zarafa'
 
 execute 'unzip_attachments' do
   command unzip_attachments

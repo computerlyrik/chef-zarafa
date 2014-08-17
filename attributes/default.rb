@@ -48,4 +48,4 @@ override['postfix']['main']['smtpd_tls_CAfile'] = ''
 override['postfix']['main']['smtp_sasl_password_maps'] = ''
 
 # Only for Import Export Recipes
-default['zarafa']['backup_dir'] = '/var/lib/zarafa/backup'
+default['zarafa']['backup_dir'] = '/zarafa_backup'
