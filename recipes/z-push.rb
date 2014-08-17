@@ -46,7 +46,13 @@ directory '/var/log/z-push' do
   group node['apache']['user']
 end
 
-apache_conf 'z-push'
+template "#{node['apache']['dir']}/sites-available/z-push" do
+  source   "z-push/z-push.conf.erb"
+  mode     '0644'
+  notifies :reload, 'service[apache2]'
+end
+
+apache_site 'z-push'
 
 template '/usr/local/z-push/config.php' do
   source 'z-push/config.php.erb'

@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-node.set['postfix']['main']['smtp_sasl_auth_enable'] = 'yes'
 node.set['postfix']['main']['smtpd_sasl_auth_enable'] = 'yes'
 node.set['postfix']['main']['smtpd_recipient_restrictions'] = 'permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination'
 
