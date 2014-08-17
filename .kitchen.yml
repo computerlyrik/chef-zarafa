@@ -63,3 +63,22 @@ suites:
       server_root_password: test
       server_repl_password: test
 
+- name: zarafa-import-export
+  run_list:
+    - recipe[zarafa]
+    - recipe[zarafa::zarafa-export]
+    - recipe[zarafa::zarafa-import]
+#    - recipe[minitest-handler]
+  attributes:
+    zarafa:
+      backend_type: mysql
+      mysql_password: test
+      catchall_user: me@example.com
+    z-push:
+      timezone: Europe/Berlin
+    mysql:
+      server_debian_password: test
+      server_backup_password: test
+      server_root_password: test
+      server_repl_password: test
+
