@@ -31,14 +31,16 @@ if node['zarafa']['ssl']
     source 'apache2/ssl.site.erb'
   end
 
-  #  execute "a2enmod rewrite"
-
   apache_site 'ssl' do
     action :enable
   end
 
   apache_site 'default' do
-    action :disable
+    enable false
+  end
+
+  apache_module 'rewrite' do
+    conf true
   end
 
 end
