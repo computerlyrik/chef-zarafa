@@ -27,7 +27,7 @@ restore_sql += "< #{dumpfile}"
 
 execute 'restore_sql' do
   command restore_sql
-  only_if { ::File.exists?(dumpfile) }
+  only_if { ::File.exist?(dumpfile) }
 end
 
 execute 'remove_dumpfile' do
@@ -42,11 +42,11 @@ filepath = "#{node['zarafa']['backup_dir']}/attachments.tar"
 
 unzip_attachments = 'tar -xf '
 unzip_attachments += "#{filepath} "
-unzip_attachments += "-C /var/lib/zarafa/attachments"
+unzip_attachments += '-C /var/lib/zarafa/attachments'
 
 execute 'unzip_attachments' do
   command unzip_attachments
-  only_if { ::File.exists?(filepath) }
+  only_if { ::File.exist?(filepath) }
 end
 
 execute 'remove_attachments_backup' do
@@ -55,4 +55,4 @@ execute 'remove_attachments_backup' do
   subscribes :run, 'execute[unzip_attachments]', :immediately
 end
 
-#directory '/var/lib/zarafa/attachments'
+# directory '/var/lib/zarafa/attachments'

@@ -46,7 +46,7 @@ directory '/var/log/z-push' do
   group node['apache']['user']
 end
 
-apache_conf 'z-push' 
+apache_conf 'z-push'
 
 template '/usr/local/z-push/config.php' do
   source 'z-push/config.php.erb'
