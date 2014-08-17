@@ -31,19 +31,19 @@ dump_sql += "> #{node['zarafa']['backup_dir']}/zarafa.dump"
 
 execute 'dump_sql' do
   command dump_sql
-  not_if ::File.exists(dumpfile)
+  not_if { ::File.exists?(dumpfile) }
 end
 
 package 'bzip2'
 
 filepath = "#{node['zarafa']['backup_dir']}/attachments.tar"
 
-zip_attachments = 'tar -cvf '
+zip_attachments = 'tar -cf '
 zip_attachments += "#{filepath} "
 zip_attachments += "/var/lib/zarafa/attachments"
 
-execute zip_attachments do
+execute 'zip_attachments' do
   command zip_attachments
-  not_if ::File.exists(dumpfile)
+  not_if { ::File.exists?(filepath) }
 end
 

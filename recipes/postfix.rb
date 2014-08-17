@@ -31,7 +31,8 @@ node['zarafa']['additional_domains'].each do |dom|
 end
 
 node.set['postfix']['main']['mydestination'] = destinations
-node.set['postfix']['main']['message_size_limit'] = 31_457_280 # 30M
+node.set['postfix']['main']['message_size_limit'] = 31457280 # 30M
+node.set['postfix']['main']['mailbox_size_limit'] = 0
 
 if node['zarafa']['ssl']
   include_recipe 'zarafa::postfix_ssl'
