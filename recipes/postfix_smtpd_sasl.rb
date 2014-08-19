@@ -28,15 +28,15 @@ group 'sasl' do
   append true
 end
 
-postfix_sasl='/var/spool/postfix/var/run/saslauthd'
+postfix_sasl = '/var/spool/postfix/var/run/saslauthd'
 directory 'postfix_sasl' do
   path '#{postfix_sasl}'
   user 'root'
   group 'sasl'
-  mode  "710"
+  mode '710'
 end
 
-link "/var/run/saslauthd" do
+link '/var/run/saslauthd' do
   to "#{postfix_sasl}"
 end
 
