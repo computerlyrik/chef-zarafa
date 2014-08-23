@@ -27,7 +27,7 @@ if node['zarafa']['ssl']
 
   include_recipe 'apache2::mod_ssl'
 
-  template '/etc/apache2/sites-available/ssl' do
+  template '/etc/apache2/sites-available/ssl.conf' do
     source 'apache2/ssl.site.erb'
   end
 
