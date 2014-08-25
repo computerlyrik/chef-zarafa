@@ -2,7 +2,7 @@
 # Cookbook Name:: zarafa
 # Attributes:: default
 #
-# Copyright 2013, computerlyrik
+# Copyright 2013, 2014 computerlyrik
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -40,12 +40,6 @@ default['zarafa']['certificate_databag_id'] = nil
 default['zarafa']['ssl_path']  = '/etc/zarafa/ssl'
 
 default['zarafa']['vmail_user'] = nil
-
-override['postfix']['main']['access_maps'] = ''
-override['postfix']['main']['transport_maps'] = ''
-override['postfix']['main']['smtp_tls_CAfile'] = ''
-override['postfix']['main']['smtpd_tls_CAfile'] = ''
-override['postfix']['main']['smtp_sasl_password_maps'] = ''
 
 # Only for Import Export Recipes
 default['zarafa']['backup_dir'] = '/zarafa_backup'

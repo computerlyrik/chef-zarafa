@@ -17,9 +17,6 @@
 # limitations under the License.
 #
 
-node.set['postfix']['main']['smtpd_sasl_auth_enable'] = 'yes'
-node.set['postfix']['main']['smtpd_recipient_restrictions'] = 'permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination'
-
 package 'sasl2-bin'
 
 group 'sasl' do
@@ -28,16 +25,18 @@ group 'sasl' do
   append true
 end
 
-postfix_sasl = '/var/spool/postfix/var/run/saslauthd'
-directory 'postfix_sasl' do
-  path postfix_sasl
+directory 'mux_path' do
+  path node['zarafa']['sasl_mux_path']
   user 'root'
   group 'sasl'
   mode '710'
 end
 
-link '/var/run/saslauthd' do
-  to postfix_sasl
+template '/etc/default/saslauthd' do
+  source 'postfix/sasl/saslauthd.erb'
+  variables ({mux_path: node['zarafa']['sasl_mux_path']})
+  notifies :restart, 'service[saslauthd]', :immediately
+  notifies :restart, 'service[postfix]'
 end
 
 service 'saslauthd' do
@@ -49,8 +48,4 @@ template '/etc/postfix/sasl/smtpd.conf' do
   notifies :restart, 'service[postfix]'
 end
 
-template '/etc/default/saslauthd' do
-  source 'postfix/sasl/saslauthd.erb'
-  notifies :restart, 'service[saslauthd]', :immediately
-  notifies :restart, 'service[postfix]'
-end
+

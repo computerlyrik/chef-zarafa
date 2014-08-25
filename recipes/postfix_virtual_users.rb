@@ -19,12 +19,10 @@
 
 case node['zarafa']['backend_type']
 when 'mysql'
-  virtual_mailbox_maps = 'mysql:/etc/postfix/mysql-users.cf'
   template '/etc/postfix/mysql-users.cf' do
     source 'postfix/mysql-users.cf.erb'
     notifies :restart, 'service[postfix]'
   end
-  virtual_alias_maps = nil
 when 'ldap'
   if Chef::Config['solo']
     Chef::Log.warn('This recipe uses search. Chef Solo does not support search. Ldap search will not be executed')
@@ -33,14 +31,11 @@ when 'ldap'
     ldap_server = search(:node, "recipes:openldap\\:\\:users && domain:#{node['domain']}").first
   end
 
-  virtual_mailbox_maps = 'ldap:/etc/postfix/ldap-users.cf'
   template '/etc/postfix/ldap-users.cf' do
     source 'postfix/ldap-users.cf.erb'
     variables ({ ldap_server: ldap_server })
     notifies :restart, 'service[postfix]', :delayed
   end
-
-  virtual_alias_maps = 'ldap:/etc/postfix/ldap-aliases.cf'
   template '/etc/postfix/ldap-aliases.cf' do
     source 'postfix/ldap-aliases.cf.erb'
     variables ({ ldap_server: ldap_server })
@@ -49,5 +44,3 @@ when 'ldap'
 
 end
 
-node.set['postfix']['main']['virtual_mailbox_maps'] = virtual_mailbox_maps
-node.set['postfix']['main']['virtual_alias_maps'] = virtual_alias_maps

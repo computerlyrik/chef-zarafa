@@ -19,23 +19,21 @@
 
 # #CONFIGURE POSTFIX SERVER############################
 
-node.set['postfix']['main']['mydomain'] = node['domain']
-node.set['postfix']['main']['myorigin'] = '/etc/mailname'
-
-node.set['postfix']['main']['virtual_mailbox_domains'] = node['domain']
-node.set['postfix']['main']['virtual_transport'] = 'lmtp:127.0.0.1:2003'
-
 destinations = "#{node['fqdn']}, localhost.#{node['domain']}, localhost"
 node['zarafa']['additional_domains'].each do |dom|
   destinations << ", #{dom}"
 end
-
 node.set['postfix']['main']['mydestination'] = destinations
-node.set['postfix']['main']['message_size_limit'] = 31457280 # 30M
-node.set['postfix']['main']['mailbox_size_limit'] = 0
+
 
 if node['zarafa']['ssl']
   include_recipe 'zarafa::postfix_ssl'
+end
+
+if node['zarafa']['use_rbl']
+  node['zarafa']['rbls'].each do |rbl|
+    node.set['postfix']['main']['smtpd_recipient_restrictions'] = node['postfix']['main']['smtpd_recipient_restrictions'].append("reject_rbl_client #{rbl}")
+  end
 end
 
 include_recipe 'postfix::server'
@@ -44,5 +42,7 @@ include_recipe 'zarafa::postfix_virtual_users'
 include_recipe 'zarafa::postfix_catchall'
 
 include_recipe 'zarafa::postfix_smtpd_sasl'
+
+
 
 package "postfix-#{node['zarafa']['backend_type']}"

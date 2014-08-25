@@ -28,8 +28,9 @@ execute 'postmap-catchall' do
   notifies :restart, 'service[postfix]'
 end
 
-if node.set['postfix']['main']['virtual_alias_maps'].nil?
+case node['zarafa']['backend_type']
+when 'mysql'
   node.set['postfix']['main']['virtual_alias_maps'] = "hash:#{catchall_file}"
-else
+when 'ldap'
   node.set['postfix']['main']['virtual_alias_maps'] << ", hash:#{catchall_file}"
 end
