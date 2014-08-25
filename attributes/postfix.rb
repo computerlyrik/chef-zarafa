@@ -50,6 +50,8 @@ end
 default['postfix']['main']['smtpd_sasl_auth_enable'] = 'yes'
 
 default['zarafa']['smtpd_recipient_restrictions'] = ['permit_mynetworks', 'permit_sasl_authenticated', 'reject_unauth_destination']
-
-default['postfix']['main']['smtpd_recipient_restrictions'] = node['zarafa']['smtpd_recipient_restrictions'] + node['zarafa']['rbls'].map { |rbl| "reject_rbl_client #{rbl}"}
 default['zarafa']['sasl_mux_path'] = '/var/run/saslauthd' #'/var/spool/postfix/var/run/saslauthd'
+
+
+# calculated postfix settings
+default['postfix']['main']['smtpd_recipient_restrictions'] = node['zarafa']['smtpd_recipient_restrictions'] + node['zarafa']['rbls'].map { |rbl| "reject_rbl_client #{rbl}"}
