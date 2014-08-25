@@ -13,7 +13,12 @@ platforms:
   network:
     - ["forwarded_port", {guest: 80, host: 8080, guest: 443, host: 8444}]
   run_list:
-  - recipe[apt]
+    - recipe[apt]
+- name: ubuntu-14.04
+  network:
+    - ["forwarded_port", {guest: 80, host: 8080, guest: 443, host: 8444}]
+  run_list:
+    - recipe[apt]
 - name: debian-7
   driver_config:
     box: opscode-debian-7.4
