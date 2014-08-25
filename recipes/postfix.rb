@@ -30,12 +30,6 @@ if node['zarafa']['ssl']
   include_recipe 'zarafa::postfix_ssl'
 end
 
-if node['zarafa']['use_rbl']
-  node['zarafa']['rbls'].each do |rbl|
-    node.set['postfix']['main']['smtpd_recipient_restrictions'] = node['postfix']['main']['smtpd_recipient_restrictions'].append("reject_rbl_client #{rbl}")
-  end
-end
-
 include_recipe 'postfix::server'
 
 include_recipe 'zarafa::postfix_virtual_users'

@@ -79,7 +79,6 @@ suites:
       backend_type: mysql
       mysql_password: test
       catchall_user: me@example.com
-      use_rbl: true
     z-push:
       timezone: Europe/Berlin
     mysql:

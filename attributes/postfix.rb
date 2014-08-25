@@ -27,7 +27,6 @@ default['postfix']['main']['virtual_transport'] = 'lmtp:127.0.0.1:2003'
 default['postfix']['main']['message_size_limit'] = 31457280 # 30M
 default['postfix']['main']['mailbox_size_limit'] = 0
 
-default['zarafa']['use_rbl'] = false
 default['zarafa']['rbls'] = ['zen.spamhaus.org', 'bl.spamcop.net', 'cbl.abuseat.org']
 
 override['postfix']['main']['access_maps'] = ''
@@ -49,6 +48,8 @@ end
 
 # postfix_smtp_sasl
 default['postfix']['main']['smtpd_sasl_auth_enable'] = 'yes'
-default['postfix']['main']['smtpd_recipient_restrictions'] = ['permit_mynetworks', 'permit_sasl_authenticated', 'reject_unauth_destination']
 
+default['zarafa']['smtpd_recipient_restrictions'] = ['permit_mynetworks', 'permit_sasl_authenticated', 'reject_unauth_destination']
+
+default['postfix']['main']['smtpd_recipient_restrictions'] = node['zarafa']['smtpd_recipient_restrictions'] + node['zarafa']['rbls'].map { |rbl| "reject_rbl_client #{rbl}"}
 default['zarafa']['sasl_mux_path'] = '/var/run/saslauthd' #'/var/spool/postfix/var/run/saslauthd'
