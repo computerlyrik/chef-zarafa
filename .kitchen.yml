@@ -8,7 +8,7 @@ platforms:
   network:
     - ["forwarded_port", {guest: 80, host: 8080, guest: 443, host: 8443}]
   run_list:
-  - recipe[apt]
+    - recipe[apt]
 - name: ubuntu-12.04
   network:
     - ["forwarded_port", {guest: 80, host: 8080, guest: 443, host: 8444}]

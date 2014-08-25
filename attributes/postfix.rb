@@ -27,7 +27,7 @@ default['postfix']['main']['virtual_transport'] = 'lmtp:127.0.0.1:2003'
 default['postfix']['main']['message_size_limit'] = 31457280 # 30M
 default['postfix']['main']['mailbox_size_limit'] = 0
 
-
+default['zarafa']['use_rbl'] = false
 default['zarafa']['rbls'] = ['zen.spamhaus.org', 'bl.spamcop.net', 'cbl.abuseat.org']
 
 override['postfix']['main']['access_maps'] = ''
