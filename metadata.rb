@@ -10,6 +10,7 @@ version          "2.9.12"
   supports os
 end
 
-%w(openssl database mysql ark apache2 postfix certificate).each do |dep|
+depends 'mysql' '5.3.6'
+%w(openssl database ark apache2 postfix certificate).each do |dep|
   depends dep
 end
