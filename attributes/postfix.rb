@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: zarafa
-# Attributes:: default
+# Attributes:: postfix
 #
 # Copyright 2013, 2014 computerlyrik
 #
