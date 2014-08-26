@@ -25,7 +25,6 @@ node['zarafa']['additional_domains'].each do |dom|
 end
 node.set['postfix']['main']['mydestination'] = destinations
 
-
 if node['zarafa']['ssl']
   include_recipe 'zarafa::postfix_ssl'
 end
@@ -36,7 +35,5 @@ include_recipe 'zarafa::postfix_virtual_users'
 include_recipe 'zarafa::postfix_catchall'
 
 include_recipe 'zarafa::postfix_smtpd_sasl'
-
-
 
 package "postfix-#{node['zarafa']['backend_type']}"

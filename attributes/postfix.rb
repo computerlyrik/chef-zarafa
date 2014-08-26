@@ -35,7 +35,6 @@ override['postfix']['main']['smtp_tls_CAfile'] = ''
 override['postfix']['main']['smtpd_tls_CAfile'] = ''
 override['postfix']['main']['smtp_sasl_password_maps'] = ''
 
-
 # for postfix_virtual_users
 case node['zarafa']['backend_type']
 when 'mysql'
@@ -49,9 +48,8 @@ end
 # postfix_smtp_sasl
 default['postfix']['main']['smtpd_sasl_auth_enable'] = 'yes'
 
-default['zarafa']['smtpd_recipient_restrictions'] = ['permit_mynetworks', 'permit_sasl_authenticated', 'reject_unauth_destination']
-default['zarafa']['sasl_mux_path'] = '/var/run/saslauthd' #'/var/spool/postfix/var/run/saslauthd'
-
+default['zarafa']['smtpd_recipient_restrictions'] = %w(permit_mynetworks permit_sasl_authenticated reject_unauth_destination)
+default['zarafa']['sasl_mux_path'] = '/var/run/saslauthd' # '/var/spool/postfix/var/run/saslauthd'
 
 # calculated postfix settings
-default['postfix']['main']['smtpd_recipient_restrictions'] = node['zarafa']['smtpd_recipient_restrictions'] + node['zarafa']['rbls'].map { |rbl| "reject_rbl_client #{rbl}"}
+default['postfix']['main']['smtpd_recipient_restrictions'] = node['zarafa']['smtpd_recipient_restrictions'] + node['zarafa']['rbls'].map { |rbl| "reject_rbl_client #{rbl}" }

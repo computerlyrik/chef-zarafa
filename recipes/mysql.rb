@@ -22,9 +22,7 @@
 
 node.set['mysql']['bind_address'] = '127.0.0.1'
 
-
-node.set['mysql']['server_root_password'] = secure_password if node['mysql']['server_root_password'] == 'ilikerandompasswords' 
-
+node.set['mysql']['server_root_password'] = secure_password if node['mysql']['server_root_password'] == 'ilikerandompasswords'
 
 include_recipe 'mysql::server'
 include_recipe 'database::mysql'

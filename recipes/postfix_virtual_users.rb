@@ -43,4 +43,3 @@ when 'ldap'
   end
 
 end
-

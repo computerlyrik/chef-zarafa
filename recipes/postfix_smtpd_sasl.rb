@@ -34,7 +34,7 @@ end
 
 template '/etc/default/saslauthd' do
   source 'postfix/sasl/saslauthd.erb'
-  variables ({mux_path: node['zarafa']['sasl_mux_path']})
+  variables ({ mux_path: node['zarafa']['sasl_mux_path'] })
   notifies :restart, 'service[saslauthd]', :immediately
   notifies :restart, 'service[postfix]'
 end
@@ -47,5 +47,3 @@ template '/etc/postfix/sasl/smtpd.conf' do
   source 'postfix/sasl/smtpd.conf.erb'
   notifies :restart, 'service[postfix]'
 end
-
-
