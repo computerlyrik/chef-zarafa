@@ -60,7 +60,6 @@ suites:
       backend_type: mysql
       mysql_password: test
       catchall_user: me@example.com
-    z-push:
       timezone: Europe/Berlin
     mysql:
       server_debian_password: test
@@ -79,7 +78,6 @@ suites:
       backend_type: mysql
       mysql_password: test
       catchall_user: me@example.com
-    z-push:
       timezone: Europe/Berlin
     mysql:
       server_debian_password: test

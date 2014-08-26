@@ -19,8 +19,8 @@
 
 # #CONFIGURE Z-PUSH############################################
 
-if node['z-push']['timezone'].nil?
-  Chef::Application.fatal!("Set node['z-push']['timezone'] !")
+if node['zarafa']['timezone'].nil?
+  Chef::Application.fatal!("Set node['zarafa']['timezone'] !")
 end
 
 minor = node['z-push']['version']

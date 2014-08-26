@@ -43,3 +43,7 @@ default['zarafa']['vmail_user'] = nil
 
 # Only for Import Export Recipes
 default['zarafa']['backup_dir'] = '/zarafa_backup'
+
+#used for z-push and plugins
+default['zarafa']['timezone'] = nil
+
