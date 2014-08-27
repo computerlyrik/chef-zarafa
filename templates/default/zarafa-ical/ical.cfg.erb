@@ -17,13 +17,13 @@ running_path = /
 server_bind = 0.0.0.0
 
 # wether normal connections can be made to the ical server
-ical_enable = no
+ical_enable = <%= ! node['zarafa']['ssl'] ? 'yes' : 'no' %>
 
 # port which the ical server listens on for normal connections
 ical_port = 8080
 
 # wether ssl connections can be made to the ical server
-icals_enable = yes
+icals_enable = <%= node['zarafa']['ssl'] ? 'yes' : 'no' %>
 
 # port which the ical server listens on for ssl connections
 icals_port = 8443

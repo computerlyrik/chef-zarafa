@@ -29,19 +29,19 @@ running_path = /
 coredump_enabled = no
 
 # enable/disable POP3, and POP3 listen port
-pop3_enable	=	no
+pop3_enable	=	<%= ! node['zarafa']['ssl'] ? 'yes' : 'no' %>
 pop3_port	=	110
 
 # enable/disable Secure POP3, and Secure POP3 listen port
-pop3s_enable	=	no
+pop3s_enable	=	<%= node['zarafa']['ssl'] ? 'yes' : 'no' %>
 pop3s_port	=	995
 
 # enable/disable IMAP, and IMAP listen port
-imap_enable	=	yes
+imap_enable	=	<%= ! node['zarafa']['ssl'] ? 'yes' : 'no' %>
 imap_port	=	143
 
 # enable/disable Secure IMAP, and Secure IMAP listen port
-imaps_enable	=	yes
+imaps_enable	=	<%= node['zarafa']['ssl'] ? 'yes' : 'no' %>
 imaps_port	=	993
 
 # Only mail folder for IMAP or all subfolders (calendar, contacts, tasks, etc. too)
