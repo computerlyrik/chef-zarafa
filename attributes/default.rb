@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-default['zarafa']['version'] = '7.1.10-44973'
+default['zarafa']['version'] = '7.1.11-45875'
 default['zarafa']['license_type'] = 'free'
 
 default['zarafa']['backend_type'] = 'mysql' # mysql or ldap
