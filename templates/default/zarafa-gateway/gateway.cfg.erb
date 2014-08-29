@@ -37,7 +37,8 @@ pop3s_enable	=	<%= node['zarafa']['ssl'] ? 'yes' : 'no' %>
 pop3s_port	=	995
 
 # enable/disable IMAP, and IMAP listen port
-imap_enable	=	<%= ! node['zarafa']['ssl'] ? 'yes' : 'no' %>
+# needed by saslauth rimap mechanism
+imap_enable	=	yes 
 imap_port	=	143
 
 # enable/disable Secure IMAP, and Secure IMAP listen port
