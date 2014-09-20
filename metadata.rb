@@ -10,7 +10,7 @@ version          "3.0.1"
   supports os
 end
 
-depends 'mysql', '= 5.3.6'
+depends 'mysql', '>= 5.3.6'
 %w(openssl database ark apache2 postfix certificate).each do |dep|
   depends dep
 end
