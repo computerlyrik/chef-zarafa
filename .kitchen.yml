@@ -32,7 +32,7 @@ suites:
   run_list:
     - recipe[openldap::server]
     - recipe[openldap::users]
-    - recipe[zarafa::ldap_additions]
+    - recipe[zarafa::ldap-additions]
     - recipe[zarafa]
     - recipe[phpldapadmin]
 #    - recipe[minitest-handler]
