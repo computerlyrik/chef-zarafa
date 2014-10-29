@@ -4,25 +4,19 @@ driver_config:
     require_chef_omnibus: true
 
 platforms:
-- name: ubuntu-12.10
+- name: ubuntu-12.04
   network:
     - ["forwarded_port", {guest: 80, host: 8080, guest: 443, host: 8443}]
   run_list:
     - recipe[apt]
-- name: ubuntu-12.04
-  network:
-    - ["forwarded_port", {guest: 80, host: 8080, guest: 443, host: 8444}]
-  run_list:
-    - recipe[apt]
 - name: ubuntu-14.04
   network:
-    - ["forwarded_port", {guest: 80, host: 8080, guest: 443, host: 8444}]
+    - ["forwarded_port", {guest: 80, host: 8081, guest: 443, host: 8444}]
   run_list:
     - recipe[apt]
-- name: debian-7
-  driver_config:
-    box: opscode-debian-7.4
-    box_url: http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_debian-7.4_chef-provisionerless.box
+- name: debian-7.7
+  network:
+    - ["forwarded_port", {guest: 80, host: 8082, guest: 443, host: 8445}]
   run_list:
   - recipe[apt]
 
